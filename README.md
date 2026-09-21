@@ -1,45 +1,104 @@
-# Appunti Electronics and Communications Systems A.A. 2026-2027
+# Appunti Electronics and Communications System A.A. 2026-2027
 
-Questi sono gli appunti del corso Electronics and Communications Systems di 2026-2027 dell'Università di Pisa.
-Per una visualizzazione ottimale con formattazione completa, rendering delle formule matematiche e funzionamento dei link di navigazione, si consiglia di consultare la versione online disponibile su [GitHub Pages](https://gabriele-d-cambria.github.io/Appunti-Electronics-and-Communications-Systems-2026-2027).
+These are _Electronics and Communications System_
+_2026-2027_ course from University of Pisa.
+For an optimal visualization, styling, math formulas rendering
+and navigation links, consult the online version available at
+[GitHub Pages](https://gabriele-d-cambria.github.io/Appunti-Electronics-and-Communications-Systems-2026-2027).
 
-## 📚 Informazioni sul Corso
+## 📚 Course Info
 
-**Docenti:**
+**Professors:**
 
-- **Giovanni Stea**
-- **Giovanni Nardini**
+- **Luca Fanucci**:
 
-**Ricevimento:**
+- **Marco Moretti**: (Communications Systems)
+  - Email: [marco.moretti@unipi.it](marco.moretti@unipi.it)
 
-**Bibliografia:**
+- **Pietro Nannipieri**
 
-**Orario:**
+**Bibliografy:**
 
-- Lunedì: 11:30-13:30 - 14:30 - 17:30
-- Giovedì: 13:30 - 16:30
-- Venerdì: 15:30 - 18:30
+- For Communications there will be handed notes written by the professor
+  (in collaboration with Chat-GPT) at the end of each argument section.
+- There is a OneNote shared on the Teams that collects all the slides.
+  The slides are also available on Teams.
 
-## 📋 Modalità d'Esame
+**Classes:**
 
-## 🎯 Struttura del Corso
+- Monday: 11:45-13:15 (Moretti) - 14:30-17:30 (Fanucci)
 
-## Laboratorio
+- Thursday: 14:15-16:15 (Moretti)
 
-## 📖 Ordine di Studio Teoria Consigliato
+- Friday: 15:30-18:30 (Fanucci)
+
+## 📋 Exam
+
+The Communication part is a written test to perform. This year there will be a
+pre-test before Christmas.
+
+This exam is composed of:
+
+- 5pt in 5 multiple questions
+
+- 20pt in open questions
+
+## 🎯 Course Structure
+
+### Electronics Structure
+
+### Communications Structure
+
+The professor shares a OneNote on the Teams,
+The communications part is done in 4 different sections:
+
+- Data Transmissions: Analog Communications and Digital Communications
+
+- Wireless Propagation Channel
+
+- Multi-Carrier Modulation
+
+- Diversity and MIMO: foundations of modern wireless systems
+
+At the end of each sections, the professor will hand out possible
+questions about that questions.
+
+The questions on the exam will be picked from these handed questions.
+
+## Lab
+
+## 📖 Suggested Study Order
+
+### Electronics Order
+
+**Note**: if you need, at this [link](https://gabriele-d-cambria.github.io/Appunti-Elettronica-Digitale-2026-2026) I have posted notes (in italian) for the Bachelor degree course "Elettronica Digitale", that shares some arguments.
+
+### Communications Order
+
+- [Analog Communications](./Analog%20Communications)
+
+**Note**: if you need, at this [link](https://gabriele-d-cambria.github.io/Appunti-Comunicazioni-Numeriche-2026-2026) I have posted notes (in italian) for the Bachelor degree course "Comunicazioni Numeriche", that shares some arguments.
 
 ## 📜 Disclaimer
 
-Questi appunti sono personali e destinati esclusivamente all'uso didattico.
+These are personal notes, and are to be used for educational purpose only.
 
-Fanno riferimento alle lezioni del corso di Electronics and Communications Systems  A.A. 2026-2027, tenute dal Prof. Giovanni Stea e dal Prof. Giovanni Nardini e al materiale fornito dai professori e reperibile sul teams e sul sito del corso.
-Non garantisco la loro correttezza, completezza o aggiornamento.
-Questi appunti non sono ufficiali e non sostituiscono le lezioni o il materiale didattico fornito dal professore.
+The notes are based on Performance Evaluation of Computer Systems A.A.
+2026-2027 lessons, teached by Prof. Giovanni Stea and Prof. Giovanni
+Nardini, and on the notes handed by the professors and available on
+the official temas and course website.
+I do not grant accuracy, completeness or updating.
+These are not official notes, and don't replace lessons or official educational
+material handed by the professors.
+didattico fornito dal professore.
 
-Per qualsiasi dubbio fare sempre riferimento al materiale ufficiale del corso e alle indicazioni del docente.
+For any doubt, refer to official course material and professors instructions.
+alle indicazioni del docente.
 
-Nel caso di errori o imprecisioni, si prega di segnalare tramite issue su GitHub o contattando direttamente l'autore.
+If you spot errors, you can report them either by GitHub issue or by contacting
+the author directly.
 
-## 📄 Licenza
+## 📄 Licence
 
-Questo materiale è protetto da copyright. Vedere il file [LICENSE](./LICENSE) per i dettagli.
+This work is protected by copyright.
+Se [LICENSE](./LICENSE) for further details.
