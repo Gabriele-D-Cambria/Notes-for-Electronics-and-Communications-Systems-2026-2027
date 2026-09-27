@@ -1,6 +1,6 @@
-# Notes for Electronics and Communications System A.Y. 2026-2027
+# Notes for Electronics and Communications Systems A.Y. 2026-2027
 
-These are _Electronics and Communications System_
+These are _Electronics and Communications Systems_
 _2026-2027_ course from University of Pisa.
 For an optimal visualization, styling, math formulas rendering
 and navigation links, consult the online version available at
@@ -134,11 +134,16 @@ The questions on the exam will be picked from these handed questions.
 
 In labs we will explore VHDL Simulation and Synthesis.
 
+To do the work we need two tools:
+
+- [ModelSim](http://www.mentor.com): for simulations
+- [Vivado](http://www.xilinx.com/products/design-tools/vivado/vivado-webpack.html)
+
 For simulation we will use _Questa_ handed by Intel that can
 [download the source code from this link](https://www.intel.com/content/www/us/en/software/programmable/quartus-prime/questa-edition.html).
 
-If there are problems with _Questa_ download, another took that can be used is _Aldec_, that can
-be [downloaded from this link](https://www.aldec.com/en/products/fpga_simulation/active_hdl_student).
+If there are problems with _Questa_ download, another took that can be used is
+_Aldec_, that can be [downloaded from this link](https://www.aldec.com/en/products/fpga_simulation/active_hdl_student).
 
 For the synthesis _AMD Vivado_ will be used, [downloadable from this link](http://www.xilinx.com/products/design-tools/vivado/vivado-webpack.html).
 
