@@ -11,7 +11,10 @@ title: Analog Communications
   - [2.3. Passband Signals](#23-passband-signals)
     - [2.3.1. Carrier Mismatch in Complex Baseband representation](#231-carrier-mismatch-in-complex-baseband-representation)
   - [2.4. Angle Modulation](#24-angle-modulation)
-    - [2.4.1. Frequency Modulation - `FM`](#241-frequency-modulation---fm)
+  - [2.5. Frequency Modulation - `FM`](#25-frequency-modulation---fm)
+    - [2.5.1. FM Signal Spectrum](#251-fm-signal-spectrum)
+    - [2.5.2. Features and Trade-offs of FM](#252-features-and-trade-offs-of-fm)
+    - [2.5.3. FM Receivers](#253-fm-receivers)
 
 # 2. Analog Communications
 
@@ -233,7 +236,7 @@ instantaneous frequency**.
 More in general we will see that _angle modulation_ includes _phase
 modulation_ and _frequency modulation_.
 
-### 2.4.1. Frequency Modulation - `FM`
+## 2.5. Frequency Modulation - `FM`
 
 In _frequency modulation_, the _instantaneous frequency deviation_ is linearly
 proportional to the message:
@@ -272,3 +275,143 @@ $$
          &= k_f \max_t \{\vert \Delta f_i (t) \vert \}
 \end{align*}
 $$
+
+To study the FM spectrum, we first consider a _single-tone_ message
+$m(t) = V_m \cos{(2\pi f_m t)}$
+
+Thus, the FM signal is:
+
+$$
+\begin{align*}
+  s_{FM}(t) &= A_c \cos{\left(2\pi f_c t + 2\pi k_f
+    \int_{-\infty}^t{V_m \cos{(2\pi f_m \tau)}\;d\tau}\right)} \\
+            &= A_c \cos{\left(2\pi f_c t + 2\pi k_f V_m \frac{1}{2\pi f_m}
+    \sin{(2\pi f_m t)}\right)} \\
+            &= A_c \cos{\left(2\pi f_c t + \frac{k_f V_m}{f_m} \sin{(2\pi f_m t)}\right)}
+$$
+
+If we consider $m_f = \frac{\Delta f}{B} = \frac{k_f V_m}{f_m}$ as the
+_modulation index_, we can write the complex envelope as:
+
+$$
+\tilde{s}_{FM}(t) = A_c e^{j m_f \sin{(2\pi f_m t)}}
+$$
+
+### 2.5.1. FM Signal Spectrum
+
+For a sinusoidal message, the complex envelope is _periodic_ of period
+$T_m = \frac{1}{f_m}$, and can be expanded in a Fourier series:
+
+$$
+\tilde{s}_{FM}(t) = A_c \sum_{n}{S_n e^{j2\pi n f_m t}}
+$$
+
+Where the coefficients $S_n$ are **Bessel functions of the first kind**:
+
+$$
+\begin{align*}
+  S_l &= \frac{1}{T_m} \int_{-T_m/2}^{T_m/2}{e^{j m_f \sin{(2\pi f_m t)}}
+                             e^{-j 2\pi l f_m t}\;dt} \\
+      &= \frac{1}{2\pi} \int_{-\pi}^{\pi}{e^{j(m_f \sin{(\theta)} - l\theta)}\;
+                              d\theta} \\
+      &= J_l(m_f)
+\end{align*}
+$$
+
+Thus, we can write our complex envelope as:
+
+$$
+  \tilde{s}_{FM}(t) = A_c \sum_{n}{J_n(m_f) e^{j2\pi n f_m t}}
+$$
+
+The passband signal is then:
+
+$$
+\begin{align*}
+  s_{FM}(t) &= A_c \sum_{n}{J_n(m_f) \cos{(2\pi (f_c + n f_m) t)}} \\
+            &= \sum_{n}{A_n \cos{(2\pi f_n t)}}
+\end{align*}
+$$
+
+Where $A_n = A_c J_n(m_f)$ and $f_n = f_c + n f_m$.
+
+To interpret this result, we use the property of _Bessel functions_ that
+states that $J_{-n}(m_f) = (-1)^n J_n(m_f)$, which shows that the upper and
+lower sidebands are symmetric around the carrier frequency $f_c$, and have the
+same magnitude.
+
+As $m_f$ increases, higher-order sidebands become significant. Since adjacent
+sidebands are spaced by $f_m$, the _effective bandwidth_ grows roughly
+as $2(m_f + 1)f_m$.
+
+For a general message signal, the FM spectrum does not admit a simple closed-form
+expression, but a good approximation can be made following the _Carson
+bandwidth rule_:
+
+$$
+  B_{FM} \approx 2(m_f + 1)B = 2(\Delta f + B)
+$$
+
+Although a FM signal theoretically has infinite bandwidth, approximately 98%
+of the signal power is contained in a bandwidth of $B_{FM}$.
+
+In commercial mono FM we have $B_{FM} \approx 180\;kHz$, in which:
+
+- $B = f_m = 15\;kHz$ is the maximum baseband frequency of the audio signal;
+- $\Delta f = 75\;kHz$ is the maximum frequency deviation.
+- $m_f = \frac{\Delta f}{B} = 5$
+- Channel spacing is $200\;kHz$.
+
+### 2.5.2. Features and Trade-offs of FM
+
+Some of the most important features of FM are:
+
+- **Constant Envelope**: FM signals have a constant amplitude, which allows
+  the use of non-linear power amplifiers that are more efficient.
+- **Bandwidth-noise robustness trade-off**: increasing $k_f$ (and hence
+  $\Delta f$) FM can achieve better noise performance than AM, but at the cost
+  of increased bandwidth.
+- **Capture effect**: In FM, when two signals are present at the nearby
+  frequency, the stronger signal tends to dominate, effectively "capturing" the
+  receiver and suppressing the weaker signal.
+- **Threshold effect**: FM receivers provides a good noise performance only
+  above a certain threshold. Below it, the signal quality degrades rapidly,
+  leading to a sudden loss of intelligibility.
+
+### 2.5.3. FM Receivers
+
+Neglecting the effect of noise and channel, the complex envelope of the
+received signal is:
+
+$$
+\tilde{v}(t) = A_c e^{j2\pi k_f \int_{-\infty}^t{m(\tau)\;d\tau}}
+$$
+
+The modulating signal can be recovered by **differentiating the phase** of the
+complex envelope:
+
+$$
+  \hat{m}(t) = \frac{1}{2\pi k_f} \frac{d}{dt} \phase{\tilde{v}(t)}
+$$
+
+FM demodulations rejects constant phase errors, and converts frequency offsets
+into DC bias:
+
+$$
+\begin{CD}
+\begin{align*}
+  \tilde{v}_{off}(t) &= A_c e^{j(2\pi k_f \int_{-\infty}^t{m(\tau)\;d\tau}}
+                          e^{2\pi \Delta f_{off} t + \Delta \phi)} \\
+  \phase{\tilde{v}_{off}(t)} &= 2\pi k_f \int_{-\infty}^t{m(\tau)\;d\tau}
+                                + 2\pi \Delta f_{off} t + \Delta \phi \\
+  \frac{d}{dt}{\phase{\tilde{v}_{off}(t)}} &= 2\pi k_f m(t) + 2\pi \Delta f_{off}
+\end{align*} \\
+@VVV \\
+\begin{align*}
+  \hat{m}_{off}(t) &= \frac{1}{2\pi k_f} \frac{d}{dt} \phase{\tilde{v}_{off}(t)}\\
+                  &= m(t) + \frac{\Delta f_{off}}{k_f}
+\end{align*}
+$$
+
+Typically, the frequency offset is small enough that it can be removed by a
+high-pass filter, which removes the DC bias.

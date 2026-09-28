@@ -154,6 +154,16 @@ We will develope on the **ZYBO** (ZYnq BOard).
 
 ## 📖 Suggested Study Order
 
+### Electronics Study Order
+
+### Communications Study Order
+
+1. [Analog Communications](./Analog%20Communications)
+
+### Lab
+
+1. [Introduction to VHDL](./lab/01%20-%20Introduction%20to%20VHDL)
+
 ### Electronics Order
 
 **Note**: if you need, [on my github page](https://gabriele-d-cambria.github.io/Appunti-Elettronica-Digitale-2026-2026)
