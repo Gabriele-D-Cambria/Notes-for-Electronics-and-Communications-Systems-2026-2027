@@ -55,9 +55,9 @@ This can be proved by analyzing the Fourier's transformations theorems and defin
 
 $$
 \begin{matrix}
-  \cos{(2\pi f_c t)} \Leftrightarrow \frac{1}{2}[\delta(f - f_c) +
-    \delta(f + f_c)] \\
-  S_{DSB}(f) = \frac{A}{2}[M(f - f_c) + M(f + f_c)]
+  \cos{(2\pi f_c t)} \Leftrightarrow \frac{1}{2}\left[\delta(f - f_c) +
+    \delta(f + f_c)\right] \\[1em]
+  S_{DSB}(f) = \frac{A}{2}\left[M(f - f_c) + M(f + f_c)\right]
 \end{matrix}
 $$
 
@@ -288,6 +288,7 @@ $$
             &= A_c \cos{\left(2\pi f_c t + 2\pi k_f V_m \frac{1}{2\pi f_m}
     \sin{(2\pi f_m t)}\right)} \\
             &= A_c \cos{\left(2\pi f_c t + \frac{k_f V_m}{f_m} \sin{(2\pi f_m t)}\right)}
+\end{align*}
 $$
 
 If we consider $m_f = \frac{\Delta f}{B} = \frac{k_f V_m}{f_m}$ as the
@@ -311,9 +312,9 @@ Where the coefficients $S_n$ are **Bessel functions of the first kind**:
 $$
 \begin{align*}
   S_l &= \frac{1}{T_m} \int_{-T_m/2}^{T_m/2}{e^{j m_f \sin{(2\pi f_m t)}}
-                             e^{-j 2\pi l f_m t}\;dt} \\
+                             e^{-j 2\pi l f_m t}\;dt} \\[1.5em]
       &= \frac{1}{2\pi} \int_{-\pi}^{\pi}{e^{j(m_f \sin{(\theta)} - l\theta)}\;
-                              d\theta} \\
+                              d\theta} \\[1.5em]
       &= J_l(m_f)
 \end{align*}
 $$
@@ -328,7 +329,7 @@ The passband signal is then:
 
 $$
 \begin{align*}
-  s_{FM}(t) &= A_c \sum_{n}{J_n(m_f) \cos{(2\pi (f_c + n f_m) t)}} \\
+  s_{FM}(t) &= A_c \sum_{n}{J_n(m_f) \cos{(2\pi (f_c + n f_m) t)}} \\[1em]
             &= \sum_{n}{A_n \cos{(2\pi f_n t)}}
 \end{align*}
 $$
@@ -400,8 +401,8 @@ into DC bias:
 $$
 \begin{CD}
 \begin{align*}
-  \tilde{v}_{off}(t) &= A_c e^{j(2\pi k_f \int_{-\infty}^t{m(\tau)\;d\tau}}
-                          e^{2\pi \Delta f_{off} t + \Delta \phi)} \\
+  \tilde{v}_{off}(t) &= A_c\cdot e^{j2\pi k_f \int_{-\infty}^t{m(\tau)\;d\tau}}
+                          \cdot e^{2\pi \Delta f_{off} t + \Delta \phi} \\
   \phase{\tilde{v}_{off}(t)} &= 2\pi k_f \int_{-\infty}^t{m(\tau)\;d\tau}
                                 + 2\pi \Delta f_{off} t + \Delta \phi \\
   \frac{d}{dt}{\phase{\tilde{v}_{off}(t)}} &= 2\pi k_f m(t) + 2\pi \Delta f_{off}
@@ -411,6 +412,7 @@ $$
   \hat{m}_{off}(t) &= \frac{1}{2\pi k_f} \frac{d}{dt} \phase{\tilde{v}_{off}(t)}\\
                   &= m(t) + \frac{\Delta f_{off}}{k_f}
 \end{align*}
+\end{CD}
 $$
 
 Typically, the frequency offset is small enough that it can be removed by a

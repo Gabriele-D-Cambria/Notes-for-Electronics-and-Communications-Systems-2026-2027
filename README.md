@@ -154,29 +154,26 @@ We will develope on the **ZYBO** (ZYnq BOard).
 
 ## 📖 Suggested Study Order
 
-### Electronics Study Order
-
-### Communications Study Order
-
-1. [Analog Communications](./Analog%20Communications)
-
-### Lab
-
-1. [Introduction to VHDL](./lab/01%20-%20Introduction%20to%20VHDL)
-
-### Electronics Order
+### Electronics
 
 **Note**: if you need, [on my github page](https://gabriele-d-cambria.github.io/Appunti-Elettronica-Digitale-2026-2026)
 I have posted notes (in italian) for the Bachelor degree course
 "Elettronica Digitale", that shares some arguments.
 
-### Communications Order
+### Communications
 
-- [Analog Communications](./Analog%20Communications)
+1. [Analog Communications](./Analog%20Communications)
+2. [Software Defined Radio](./Software%20Defined%20Radio)
+
 
 **Note**: if you need, [on my github page](https://gabriele-d-cambria.github.io/Appunti-Comunicazioni-Numeriche-2026-2026)
 I have posted notes (in italian) for the Bachelor degree course
 "Comunicazioni Numeriche", that shares some arguments.
+
+### Lab
+
+1. [Digital Systems](./lab/Digital%20Systems)
+
 
 ## 📜 Disclaimer
 
