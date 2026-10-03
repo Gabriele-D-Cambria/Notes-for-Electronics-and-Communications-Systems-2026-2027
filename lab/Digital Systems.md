@@ -199,8 +199,8 @@ The main `port_modes` that define the _entity interface_ are `in`, `out` and `in
 -- To avoid linking problems, the entity name must be the same as the file name
 entity HalfAdder is
   port (
-    a  : int std_logic;
-    b  : int STD_LOGIC;    -- VHDL is case-insensitive
+    a  : in  std_logic;
+    b  : in  STD_LOGIC;    -- VHDL is case-insensitive
     co : out std_logic;
     s  : out std_logic     -- last port has no `;`
 );

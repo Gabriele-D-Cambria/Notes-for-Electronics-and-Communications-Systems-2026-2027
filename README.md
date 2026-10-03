@@ -156,7 +156,7 @@ We will develope on the **ZYBO** (ZYnq BOard).
 
 ### Electronics
 
-**Note**: if you need, [on my github page](https://gabriele-d-cambria.github.io/Appunti-Elettronica-Digitale-2026-2026)
+**Note**: if you need, [on my github page](https://gabriele-d-cambria.github.io/Appunti-Elettronica-Digitale-2025-2026)
 I have posted notes (in italian) for the Bachelor degree course
 "Elettronica Digitale", that shares some arguments.
 
@@ -166,7 +166,7 @@ I have posted notes (in italian) for the Bachelor degree course
 2. [Software Defined Radio](./Software%20Defined%20Radio)
 
 
-**Note**: if you need, [on my github page](https://gabriele-d-cambria.github.io/Appunti-Comunicazioni-Numeriche-2026-2026)
+**Note**: if you need, [on my github page](https://gabriele-d-cambria.github.io/Appunti-Comunicazioni-Numeriche-2025-2026)
 I have posted notes (in italian) for the Bachelor degree course
 "Comunicazioni Numeriche", that shares some arguments.
 

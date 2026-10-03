@@ -400,18 +400,18 @@ into DC bias:
 
 $$
 \begin{CD}
-\begin{align*}
+\begin{aligned}
   \tilde{v}_{off}(t) &= A_c\cdot e^{j2\pi k_f \int_{-\infty}^t{m(\tau)\;d\tau}}
                           \cdot e^{2\pi \Delta f_{off} t + \Delta \phi} \\
   \phase{\tilde{v}_{off}(t)} &= 2\pi k_f \int_{-\infty}^t{m(\tau)\;d\tau}
                                 + 2\pi \Delta f_{off} t + \Delta \phi \\
   \frac{d}{dt}{\phase{\tilde{v}_{off}(t)}} &= 2\pi k_f m(t) + 2\pi \Delta f_{off}
-\end{align*} \\
+\end{aligned} \\
 @VVV \\
-\begin{align*}
+\begin{aligned}
   \hat{m}_{off}(t) &= \frac{1}{2\pi k_f} \frac{d}{dt} \phase{\tilde{v}_{off}(t)}\\
                   &= m(t) + \frac{\Delta f_{off}}{k_f}
-\end{align*}
+\end{aligned}
 \end{CD}
 $$
 
