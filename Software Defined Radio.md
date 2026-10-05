@@ -8,6 +8,7 @@ title: Software Defined Radio
 - [2. Software Defined Radio](#2-software-defined-radio)
   - [2.1. The RTL-SDR Platform](#21-the-rtl-sdr-platform)
   - [2.2. From RF to Complex Baseband](#22-from-rf-to-complex-baseband)
+  - [2.3. FM Mono Broadcasting Signal](#23-fm-mono-broadcasting-signal)
 
 # 2. Software Defined Radio
 
@@ -89,3 +90,65 @@ The RTL-SDR contains two main signal-processing blocks:
   intermediate frequency_ (IF)
 - **The RTL2832U**: It samples the IF signal and performs _digital quadrature
   downconversion_, filtering and decimation.
+
+<div class="grid2">
+<div class="">
+
+In the image on the right we can see the schema of all the passages between
+the RF antenna and the complex I/Q samples given to the host computer.
+
+The first step is a _Low Noise Amplifier_ `LNA`, which is an amplifier built to
+specifically amplify weak signals captured by the antenna, while minimizing
+the noise added to them.
+
+This is then sent through a RF image Rejection filter, which is a bandpass
+filter that removes the unwanted image frequency, coming from other signals
+captured by the antenna.
+
+The filtered signal is then modulated by a tunable RF Voltage Controlled Oscillator
+that generates a frequency that is mixed with the filtered signal to produce an
+intermediate frequency (IF) signal at $f_{IF} = \vert f_c - f_{LO} \vert
+\approx 3.57\;MHz$, before going through a second bandpass filter to remove
+the unwanted mixing products.
+
+This sampled signal is then again amplified by a _Variable-Gain Amplifier_
+`VGA`, and at last filtered by a Anti-Aliasing Low-Pass filter before being
+sampled by a `8-bit ADC`, clocked at $f_{ADC} = 28.8\;MHz$.
+
+The digital signal will then be in form of IF samples $v_{IF}[n]$ mixed with
+quadrature NCO signals. The digital samples will go through two different modulation
+(and high frequency filtering) to recover the $v_I[n]$ and $v_Q[n]$ components
+in order to give a complex baseband signal $\tilde{v}[n] = v_I[n] + j v_Q[n]$.
+
+The samples will arrive with a frequency up to $f_{s} = 2.8\;MS/s$, and will
+be sent to the host computer through a simple USB connection.
+
+The FM demodulation is implemented afterwards in software (like MATLAB).
+
+</div>
+<div class="">
+<img class="100" src="./images/radio-comms/rf-to-complex-baseband-scheme.png"
+      alt="From RF to complex baseband" />
+</div>
+</div>
+
+## 2.3. FM Mono Broadcasting Signal
+
+Mono FM broadcasting was introduced in 1945 and quickly became a major commercial
+success.
+
+The modulating signal $m(t)$ is obtained by combining the left $L(t)$ and
+right $R(t)$ audio channels:
+
+$$
+\large
+m(t) = L(t) + R(t)
+$$
+
+The message $m(t)$ is first _low-pass filtered_ to a bandwidth of $15\;kHz$,
+and then **normalized** to $1$ and $k_f = 75\;kHz/V$.
+In this way $\Delta f = k_f \max_t{\vert m(t) \vert} = 75\;kHz$, with $m_f =
+ \frac{75}{15} = 5$.
+
+This way, by the Bradley's rule, the FM signal will occupy a bandwidth of $B_T
+= 2(\Delta f + f_m) = 2(75 + 15) = 180\;kHz$.
