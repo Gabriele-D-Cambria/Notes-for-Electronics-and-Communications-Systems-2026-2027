@@ -156,6 +156,8 @@ We will develope on the **ZYBO** (ZYnq BOard).
 
 ### Electronics
 
+1. [IC Design Styles and Flows](./IC%20Design%20Styles%20and%20Flows)
+
 **Note**: if you need, [on my github page](https://gabriele-d-cambria.github.io/Appunti-Elettronica-Digitale-2025-2026)
 I have posted notes (in italian) for the Bachelor degree course
 "Elettronica Digitale", that shares some arguments.
