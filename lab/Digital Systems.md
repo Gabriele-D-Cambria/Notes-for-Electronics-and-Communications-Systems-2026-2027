@@ -557,5 +557,320 @@ architecture dataflow of LUT_32x8 is
 begin
   addr_int  <= to_integer(unsigned(addr));   -- convert std_logic_vector to integer
   datao     <= lut(addr_int);
+end architecture;
+```
+
+## Finite State Machine (FSM)
+
+**Finite State Machines (FSMs)** are a mathematical model of computation used
+to design digital systems that can be in one of a finite number of states at
+any given time. FSMs are widely used in digital design for control logic,
+protocol handling, and sequential circuit design.
+
+To implement a FSM in VHDL, lest follow this example.
+
+Suppose we have a three state machine:
+
+<img class="" src="./images/digital_design/example-fsm.png"
+      alt="Example of a Finite State Machine with three states">
+
+We can describe this entity as:
+
+```vhdl
+library ieee;
+use ieee.std_logic_1164.all;
+
+entity FSM is
+  port (
+    clk     : in  std_logic;
+    resetn  : in  std_logic;
+    my_in   : in  std_logic;
+    my_out  : out std_logic
+);
+end entity;
+```
+
+We can use a three process paradigm, following _Delayed Mealy Design_, and
+describe the architecture as:
+
+```vhdl
+architecture three_proc of FSM is
+
+  -- State type definition
+  type state_t is (ST1, ST2, ST3);
+  signal curr_state, next_state : state_t;
+
+begin
+
+  p_STATE_REG: process (clk, resetn)
+  begin
+    if resetn = '0' then
+      -- initial state, asynch resetn
+      curr_state <= ST1;
+    elsif rising_edge(clk) then
+      curr_state <= next_state;
+    end if;
+  end process;
+
+  p_NEXT_STATE_LOGIC: process (curr_state, my_in)
+  begin
+    next_state <= curr_state; -- default assignment, used as fallback
+
+    case curr_state is
+      when ST1 =>
+        if my_in = '1' then
+          next_state <= ST2;
+        end if;
+
+      when ST2 =>
+        if my_in = '0' then
+          next_state <= ST3;
+        else
+          next_state <= ST1;
+        end if;
+
+      when ST3 =>
+        if my_in = '0' then
+          next_state <= ST1;
+        end if;
+    end case;
+  end process;
+
+  p_OUTPUT_LOGIC: process (curr_state)
+  begin
+    -- default
+    my_out <= '0';
+
+    case curr_state is
+      when ST1 => null;
+      when ST2 => null;
+      when ST3 => my_out <= '1';
+    end case;
+  end process;
+
+end architecture;
+```
+
+## Signals, Variables and Time
+
+In VHDL, signals and variables are used to represent data and control the flow
+of information within a design. However, they are two different concepts with
+distinct characteristics and usage.
+
+- **Variables**: they live only _inside the process_, and immediately update
+  the value of their assignment. `variable_name := expression`
+- **Signals**: they live inside the architecture. The update their value _immediately_
+  if used in _combinatorial code_ or _after process elaboration_ if used in
+  _sequential code_. `signal_name <= expression [after delay]`
+
+```vhdl
+architecture example of my_entity is
+signal my_vec   : std_logic_vector(15 downto 0);
+signal num_zero : std_logic_vector(3 downto 0);
+
+begin
+
+  p_ZERO_CNT: process (my_vec)
+    variable zero_count : integer;
+  begin
+    zeros_count := 0;
+      for i in my_vec'range loop
+        if my_vec(i) = '0' then
+          zero_count := zero_count + 1;
+        end if;
+      end loop;
+
+    num_zero <=
+      std_logic_vector(
+        to_unsigned(zero_count, num_zero'length)
+      );
+  end process;
+
+end architecture;
+```
+
+As for time, it is a **integer multiple of the selected _resolution limit_**.
+
+The minimum resolution limit is $1\;fs$ of physical TIME.
+
+Secondary units are possible for a longer period of simulation time.
+
+Thus, a signal assignment may occur:
+
+- **Delta Delay**: Without any delay (delay of 0 fs)
+- **Inertial Delay**: Delay that models a switching time
+- **Transport Delay**: Delay that models transmission line
+
+```vhdl
+A <= B or C after 5ns;        -- (default is inertial)
+A <= inertial B after 10ns;   -- If B changes twice in 10ns, A will not change
+A <= transport B after 10ns;  -- If B changes twice in 10ns, A will change twice
+```
+
+<img class="" src="./images/digital_design/timing-inert-trans.png"
+      alt="Timing diagram showing the difference between inertial and transport
+      delays">
+
+The delta delay simply makes all changes happening in a _user time unit_ **in
+the same simulation time**.
+
+Since changes only happen after a _delta delay_, any signal changes within the
+same process will not take the updated values, but the ones in the cycle before.
+
+<div class="grid2">
+<div class="">
+
+```vhdl
+entity sv is
+  port(
+    d         : in std_logic;
+    q_signal  : out std_logic;
+    q_var     : out std_logic
+  );
+end entity;
+
+architecture behav of sv is
+  signal a_signal : std_logic;
+
+begin
+
+  P1: process(d)
+    variable a_var : std_logic;
+  begin
+    a_signal <= d;
+    a_var := d;
+    q_signal <= a_signal;
+    q_var <= a_var;
+  end process;
+
+end architecture;
+```
+
+</div>
+<div class="">
+<img class="80" src="./images/digital_design/time-updates.png"
+     alt="Timing diagram showing the difference between signal and variable
+     assignments">
+</div>
+</div>
+
+## Simulations
+
+### Test Bench
+
+A **Test Bench** is a model that is used to exercise and verify the
+correctness of a hardware model.
+
+The expressive power of the VHDL language provides us with the capability of writing
+_test benches_ model also in the same language.
+
+They usually have three main purposes:
+
+1. To **generate** stimuli for simulation (waveform, test vectors, stimuli
+   file, ...)
+2. To **apply** these stimuli to the _Design Under Test (DUT)_ and to monitor
+   the outputs
+3. To **compare** output responses with expected known results.
+
+There are many ways to write a test bench in VHDL, but they all start with declaring
+a **empty entity** (only generic):
+
+```vhdl
+entity ripple_carry_adder_tb is
+  generic (...);
+end entity;
+```
+
+The architecture follows a top level component declaration, where DUT is instantiated,
+signals and constants are declared, and input signals are initialized:
+
+```vhdl
+architecture beh of ripple_carry_adder_tb is
+  constant clk_period : time := 100 ns;
+  constant N          : positive := 8;
+
+  -- DUT component declaration
+  component ripple_carry_adder is
+    generic (
+      Nbit  : positive
+    );
+    port (
+      a     : in  std_logic_vector(Nbit-1 downto 0);
+      b     : in  std_logic_vector(Nbit-1 downto 0);
+      cin   : in  std_logic;
+      s     : out std_logic_vector(Nbit-1 downto 0);
+      cout  : out std_logic
+  );
+  end component;
+
+  -- Signals and constants declaration
+  signal clk        : std_logic := '0';
+  signal a_ext      : std_logic_vector(N-1 downto 0) := (others => '0');
+  signal b_ext      : std_logic_vector(N-1 downto 0) := (others => '0');
+  signal cin_ext    : std_logic := '0';
+  signal s_ext      : std_logic_vector(N-1 downto 0);
+  signal cout_ext   : std_logic;
+  signal testing    : boolean := true;
+```
+
+The first step is to make the clock signal and declare the DUT:
+
+```vhdl
+begin
+  clk <= not clk after clk_period/2 when testing else '0';
+
+  i_DUT: ripple_carry_adder
+    generic map (
+      Nbit => N
+    )
+    port map (
+      a     => a_ext,
+      b     => b_ext,
+      cin   => cin_ext,
+      s     => s_ext,
+      cout  => cout_ext
+    );
+```
+
+At this point we have to build the actual test bench process.
+A possible structure could be the following:
+
+```vhdl
+  p_STIMULUS: process begin
+    a_ext <= (others => '0');
+    b_ext <= (others => '0');
+    cin_ext <= '0';
+
+    wait for 200 ns;
+
+    a_ext <= "00000110";
+    b_ext <= "00100110";
+    cin_ext <= '0';
+
+    wait until rising_edge(clk);
+
+    a_ext <= x"76";
+    b_ext <= x"14";
+    cin_ext <= '1';
+
+    wait until rising_edge(clk);
+
+    a_ext <= (others => '0');
+    b_ext <= (others => '0');
+    cin_ext <= '0';
+
+    wait for 1008 ns;
+
+    a_ext <= "11111111";
+    b_ext <= "11111111";
+    cin_ext <= '0';
+
+    wait for 500 ns;
+
+    testing <= false;     -- important to stop the clock and the simulation
+
+    wait until rising_edge(clk); -- blocked here
+
+  end process;
 end architecture;
 ```

@@ -167,7 +167,6 @@ I have posted notes (in italian) for the Bachelor degree course
 1. [Analog Communications](./Analog%20Communications)
 2. [Software Defined Radio](./Software%20Defined%20Radio)
 
-
 **Note**: if you need, [on my github page](https://gabriele-d-cambria.github.io/Appunti-Comunicazioni-Numeriche-2025-2026)
 I have posted notes (in italian) for the Bachelor degree course
 "Comunicazioni Numeriche", that shares some arguments.
@@ -175,7 +174,6 @@ I have posted notes (in italian) for the Bachelor degree course
 ### Lab
 
 1. [Digital Systems](./lab/Digital%20Systems)
-
 
 ## 📜 Disclaimer
 
