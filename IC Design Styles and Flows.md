@@ -4,6 +4,8 @@ title: IC Design Styles and Flows
 
 # 1. Index
 
+<!--toc:start-->
+
 - [1. Index](#1-index)
 - [2. IC Design Styles and Flows](#2-ic-design-styles-and-flows)
   - [2.1. Design Abstraction](#21-design-abstraction)
@@ -12,6 +14,16 @@ title: IC Design Styles and Flows
       - [2.1.2.1. Gate Arrays Structure](#2121-gate-arrays-structure)
       - [2.1.2.2. Standard Cell Structure](#2122-standard-cell-structure)
       - [2.1.2.3. Usage of Intellectual Property (IP) Cores](#2123-usage-of-intellectual-property-ip-cores)
+  - [2.2. Cost-Performance Trade-offs](#22-cost-performance-trade-offs)
+    - [2.2.1. NRE Costs](#221-nre-costs)
+  - [2.3. Field Programmable Gate Arrays (FPGAs)](#23-field-programmable-gate-arrays-fpgas)
+    - [2.3.1. Programming Methods](#231-programming-methods)
+      - [2.3.1.1. Anti-Fuse](#2311-anti-fuse)
+      - [2.3.1.2. SRAM based](#2312-sram-based)
+    - [2.3.2. Architecture](#232-architecture)
+      - [2.3.2.1. FPGA Actel](#2321-fpga-actel)
+      - [2.3.2.2. FPGA Xilinx](#2322-fpga-xilinx)
+      <!--toc:end-->
 
 # 2. IC Design Styles and Flows
 
@@ -219,7 +231,7 @@ They are characterized in:
   for a specific target technology and can be directly integrated into a design,
   but is less flexible than soft IP.
 
-## Cost-Performance Trade-offs
+## 2.2. Cost-Performance Trade-offs
 
 When developing and manufacturing an IC, one of the major drawback is the **overall
 cost**. It does not only require significant investment and risks, becoming an high
@@ -265,7 +277,7 @@ $$
 \end{align*}
 $$
 
-### NRE Costs
+### 2.2.1. NRE Costs
 
 If we analyze costs time-wise, _full-custom_ involves the greatest design time.
 _Semi-custom_ design is faster, but still requires significant time for design
@@ -306,7 +318,7 @@ _standard-cell_), ...
 This said, for applications with low/medium volume is important to **keep NRE
 costs to a minimum**.
 
-## Field Programmable Gate Arrays (FPGAs)
+## 2.3. Field Programmable Gate Arrays (FPGAs)
 
 They follow a similar architecture to gate arrays, but they are **reprogrammable**.
 
@@ -336,12 +348,12 @@ With FPGA the workflow changes as shown in the following image:
 <img class="80" src="./images/ic-design-styles/fpga-flow.png"
       alt="FPGA Design Flow" >
 
-### Programming Methods
+### 2.3.1. Programming Methods
 
 To program an FPGA, we can use different methods, depending on the type of
 FPGA and the desired functionality.
 
-#### Anti-Fuse
+#### 2.3.1.1. Anti-Fuse
 
 It's similar to the first types of PROM, in which the programming is done by
 permanently deleting a connection between two points in the circuit.
@@ -349,7 +361,7 @@ permanently deleting a connection between two points in the circuit.
 In this case when we program the FPGA, we **create** a permanent connection
 between two points in the circuit, called _poly_ and _diffusion_.
 
-#### SRAM based
+#### 2.3.1.2. SRAM based
 
 This type of FPGA uses **SRAM cells** to store the configuration data.
 When the FPGA is powered on, the configuration data is loaded from an external
@@ -362,7 +374,7 @@ errors_) and that the configuration data is **lost when the power is turned off*
 This kind of FPGA is **Run Time Reprogrammable**, meaning that we can change
 the configuration without needing to power off the circuit.
 
-### Architecture
+### 2.3.2. Architecture
 
 The architecture of an FPGA is based on a grid of configurable logic blocks
 (CLBs) that can have a different comlexity and granularity, depending on the
@@ -375,7 +387,7 @@ FPGA family and manufacturer:
   6-input LUT. A LT is a small memory that can implement any logic function of
   its inputs by storing the truth table of the function in the memory.
 
-#### FPGA Actel
+#### 2.3.2.1. FPGA Actel
 
 The structure is described in the following image:
 
@@ -385,7 +397,7 @@ The structure is described in the following image:
 Each basic logic cell is a 8-input LUT, able to implement all function with 2
 or 3 inputs, and many with 4.
 
-#### FPGA Xilinx
+#### 2.3.2.2. FPGA Xilinx
 
 It uses Volatile Static Memory based on the CMOS standard cell.
 

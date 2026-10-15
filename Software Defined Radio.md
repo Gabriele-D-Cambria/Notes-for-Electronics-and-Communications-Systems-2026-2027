@@ -4,11 +4,14 @@ title: Software Defined Radio
 
 # 1. Index
 
+<!--toc:start-->
+
 - [1. Index](#1-index)
 - [2. Software Defined Radio](#2-software-defined-radio)
   - [2.1. The RTL-SDR Platform](#21-the-rtl-sdr-platform)
   - [2.2. From RF to Complex Baseband](#22-from-rf-to-complex-baseband)
   - [2.3. FM Mono Broadcasting Signal](#23-fm-mono-broadcasting-signal)
+  - [2.4. FM Reception with RTL-SDR](#24-fm-reception-with-rtl-sdr)
 
 # 2. Software Defined Radio
 
@@ -152,3 +155,58 @@ In this way $\Delta f = k_f \max_t{\vert m(t) \vert} = 75\;kHz$, with $m_f =
 
 This way, by the Bradley's rule, the FM signal will occupy a bandwidth of $B_T
 = 2(\Delta f + f_m) = 2(75 + 15) = 180\;kHz$.
+
+## 2.4. FM Reception with RTL-SDR
+
+At the end of the process we will have the _complex envelope sample_, on which
+we can implement the FM demodulation in software:
+
+$$
+  \tilde{v}[k] = v_I[k] + j v_Q[k] =
+    A_c \cdot e^{j2\pi k_f \int_{-\infty}^{t} m(\tau) d\tau}
+$$
+
+<img class="50" src="./images/radio-comms/reception-scheme.png">
+
+The schema just presented shows how to process the signals coming from the SDR.
+
+The first step is to **demodulate** the complex baseband signal $\tilde{v}[n]$ to
+recover the message.
+To do so we need to **differentiate** its phase, obtaining:
+
+$$
+  \hat{m}(t) = \frac{1}{2\pi k_f} \frac{d}{dt} \phase{\tilde{v}(t)}
+$$
+
+The problem with this approach is that our samples are _discrete_, so we need
+a **discrete-time approximation** taking the samples at multiples of
+$T_s = \frac{1}{f_s}$:
+
+$$
+\begin{align*}
+  \tilde{v}[k] &= \tilde{v}(kT_s) =
+A_c \cdot e^{j2\pi k_f \int_{-\infty}^{kT_s}{m(\tau);d\tau}} \\
+  \tilde{v}[k-1] &= \tilde{v}\bigl((k-1)T_s\bigr) =
+A_c \cdot e^{j2\pi k_f \int_{-\infty}^{(k-1)T_s}{m(\tau);d\tau}} \\
+\end{align*}
+$$
+
+Considering we can approximate integrals with sums, we can compute the product
+of two consecutive baseband samples:
+
+$$
+\tilde{v}[k]\tilde{v}^*[k-1] =
+  A_c^2 \cdot e^{j2\pi k_f \int_{(k-1)T_s}^{kT_s}{m(\tau);d\tau}} \approx
+  A_c^2 \cdot e^{j2\pi k_f m[k] T_s}
+$$
+
+If we try to extract the phase of this product we get an _estimate_ of $m[k]$:
+
+$$
+\hat{m}[k] = \frac{1}{2\pi k_f T_s} \phase{\tilde{v}[k]\tilde{v}^*[k-1]}
+  = \frac{f_s}{2\pi \Delta f} \phase{\tilde{v}[k]\tilde{v}^*[k-1]}
+$$
+
+We can see how multiplying the current sample by the complex conjugate of the
+previous one removes the accumulated phase, retaining only the _phase increment_
+between consecutive samples.
