@@ -166,6 +166,8 @@ I have posted notes (in italian) for the Bachelor degree course
 
 1. [Analog Communications](./Analog%20Communications)
 2. [Software Defined Radio](./Software%20Defined%20Radio)
+3. [Random Signals](./Random%20Signals)
+4. [Digital Communications](./Digital%20Communications)
 
 **Note**: if you need, [on my github page](https://gabriele-d-cambria.github.io/Appunti-Comunicazioni-Numeriche-2025-2026)
 I have posted notes (in italian) for the Bachelor degree course
