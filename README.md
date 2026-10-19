@@ -157,6 +157,8 @@ We will develope on the **ZYBO** (ZYnq BOard).
 ### Electronics
 
 1. [IC Design Styles and Flows](./IC%20Design%20Styles%20and%20Flows)
+1. [Design Metric and Trade Offs](./Design%20Metrics%20and%20Trade%20Offs)
+1. [CMOS Combinatory Logic](./CMOS%20Combinatory%20Logic)
 
 **Note**: if you need, [on my github page](https://gabriele-d-cambria.github.io/Appunti-Elettronica-Digitale-2025-2026)
 I have posted notes (in italian) for the Bachelor degree course
@@ -165,9 +167,9 @@ I have posted notes (in italian) for the Bachelor degree course
 ### Communications
 
 1. [Analog Communications](./Analog%20Communications)
-2. [Software Defined Radio](./Software%20Defined%20Radio)
-3. [Random Signals](./Random%20Signals)
-4. [Digital Communications](./Digital%20Communications)
+1. [Software Defined Radio](./Software%20Defined%20Radio)
+1. [Random Signals](./Random%20Signals)
+1. [Digital Communications](./Digital%20Communications)
 
 **Note**: if you need, [on my github page](https://gabriele-d-cambria.github.io/Appunti-Comunicazioni-Numeriche-2025-2026)
 I have posted notes (in italian) for the Bachelor degree course
