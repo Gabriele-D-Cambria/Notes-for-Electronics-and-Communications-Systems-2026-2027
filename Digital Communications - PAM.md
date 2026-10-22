@@ -1,5 +1,5 @@
 ---
-title: Digital Communications
+title: Digital Communications - PAM
 ---
 
 # 1. Index
@@ -7,22 +7,25 @@ title: Digital Communications
 <!--toc:start-->
 
 - [1. Index](#1-index)
-- [2. Digital Communications](#2-digital-communications)
-  - [2.1. Pulse Amplitude Modulation (PAM)](#21-pulse-amplitude-modulation-pam)
-    - [2.1.1. Symbol Mapping](#211-symbol-mapping)
-    - [2.1.2. Power Spectral Density](#212-power-spectral-density)
-    - [2.1.3. Pulse Shaping](#213-pulse-shaping)
-    - [2.1.4. Receiver Architecture](#214-receiver-architecture)
-      - [2.1.4.1. Received Signal and Noise](#2141-received-signal-and-noise)
-      - [2.1.4.2. Receive Filter and Nyquist Criterion](#2142-receive-filter-and-nyquist-criterion)
-        - [2.1.4.2.1. Raised-Cosine Filter](#21421-raised-cosine-filter)
-        - [2.1.4.2.2. Noise](#21422-noise)
-        - [2.1.4.2.3. Bandwidth](#21423-bandwidth)
-        - [2.1.4.2.4. Power and Symbol Energy](#21424-power-and-symbol-energy)
-        - [2.1.4.2.5. Noise Variance](#21425-noise-variance)
-      - [2.1.4.3. Decision Logic](#2143-decision-logic)
+- [2. Digital Communications (PAM)](#2-digital-communications-pam)
+  - [2.1. Symbol Mapping](#21-symbol-mapping)
+  - [2.2. Power Spectral Density](#22-power-spectral-density)
+  - [2.3. Pulse Shaping](#23-pulse-shaping)
+  - [2.4. Receiver Architecture](#24-receiver-architecture)
+    - [2.4.1. Received Signal and Noise](#241-received-signal-and-noise)
+    - [2.4.2. Receive Filter and Nyquist Criterion](#242-receive-filter-and-nyquist-criterion)
+      - [2.4.2.1. Raised-Cosine Filter](#2421-raised-cosine-filter)
+      - [2.4.2.2. Noise](#2422-noise)
+      - [2.4.2.3. Bandwidth](#2423-bandwidth)
+      - [2.4.2.4. Power and Symbol Energy](#2424-power-and-symbol-energy)
+      - [2.4.2.5. Noise Variance](#2425-noise-variance)
+    - [2.4.3. Decision Logic](#243-decision-logic)
+  - [2.5. PAM Error Probability](#25-pam-error-probability)
+    - [2.5.1. Error Probability for PAMs](#251-error-probability-for-pams)
+    - [2.5.2. Gray Mapping](#252-gray-mapping)
+    <!--toc:end-->
 
-# 2. Digital Communications
+# 2. Digital Communications (PAM)
 
 The passband signal in a communication system takes the following form:
 
@@ -37,15 +40,13 @@ continuous-valued message signal $m(t)$.
 Instead, in _digital modulation_ it is generate from a **discrete sequence of
 information symbols**.
 
-## 2.1. Pulse Amplitude Modulation (PAM)
-
 The **Pulse Amplitude Modulation** (`PAM`) is obtained by:
 
 1. Mapping the bits $d_k$ to **information symbols** $a_i$
 1. Generating a continuous-tie waveform by _pulse shaping_ the symbol
    sequence with a _transmit filter_ of _impulsive response_ $g_T(t)$.
 
-<img class="" src="./images/digital-comms/pam-scheme.png" alt="PAM scheme">
+<img class="" src="./images/digital-comms-pam/pam-scheme.png" alt="PAM scheme">
 
 Since each information symbol represents $q$ bits, the relationship between
 _bit-duration_ $T_b$ and _symbol-interval_ $T$ is:
@@ -77,7 +78,7 @@ $$
 s_{PAM}(t) := \tilde{s}_{PAM}(t) = \sum_m{a_m \cdot g_T(t - mT)}
 $$
 
-### 2.1.1. Symbol Mapping
+## 2.1. Symbol Mapping
 
 The **mapper** is a device that associates a sequence of $q$ bits $d_k$ to a single
 symbol $a_m \in A \subset \R$.
@@ -116,7 +117,7 @@ constellations that yield two properties:
 2. Adjacent symbol map sequence of bits different for **exactly one bit**.
 
 <figure class="">
-<img class="100" src="./images/digital-comms/gray-map-example.png"
+<img class="100" src="./images/digital-comms-pam/gray-map-example.png"
       alt="Gray Mapping Examples">
 <figcaption>
 
@@ -125,7 +126,7 @@ Some example of **Gray Mapping**
 </figcaption>
 </figure>
 
-### 2.1.2. Power Spectral Density
+## 2.2. Power Spectral Density
 
 The symbol sequence $\Set{a_m}$ is modelled as a **stationary discrete-time**,
 **discrete-valued** random process with independent symbols.
@@ -189,7 +190,7 @@ $$
 S_s(f) = \frac{A}{T} \cdot \vert G_T(f) \vert^2
 $$
 
-### 2.1.3. Pulse Shaping
+## 2.3. Pulse Shaping
 
 The choice of the _low-pass transmit_ filter determines the spectrum and the
 bandwidth of the PAM signal.
@@ -201,12 +202,12 @@ each other.
 
 The temporal overlap does not necessarily imply interference at the sampling instant.
 
-<img class="30" src="./images/digital-comms/pam-pulse-shaping.png"
+<img class="30" src="./images/digital-comms-pam/pam-pulse-shaping.png"
       alt="PAM Pulse Shaping">
 
-### 2.1.4. Receiver Architecture
+## 2.4. Receiver Architecture
 
-<img class="" src="./images/digital-comms/pam-receiver.png"
+<img class="" src="./images/digital-comms-pam/pam-receiver.png"
       alt="PAM Receiver Architecture">
 
 The propagation channel is generally modelled as an **LTI filter** with
@@ -235,12 +236,12 @@ reverse order:
 
 </div>
 <div class="">
-<img class="80" src="./images/digital-comms/baseband-pam.png"
+<img class="80" src="./images/digital-comms-pam/baseband-pam.png"
       alt="Baseband PAM Receiver Architecture">
 </div>
 </div>
 
-#### 2.1.4.1. Received Signal and Noise
+### 2.4.1. Received Signal and Noise
 
 The received complex baseband signal is:
 
@@ -265,7 +266,7 @@ $$
 \tilde{w}(t) = w_I(t) + j w_Q(t) \quad \rArr \quad S_{\tilde{w}}(f) = 2N_0
 $$
 
-#### 2.1.4.2. Receive Filter and Nyquist Criterion
+### 2.4.2. Receive Filter and Nyquist Criterion
 
 The receive filter shapes both the useful signal and the noise:
 
@@ -332,10 +333,10 @@ $$
 \sum_{k=-\infty}^{\infty}{G(f-k/T)} = T
 $$
 
-<img class="" src="./images/digital-comms/nyquist-criterion.png"
+<img class="" src="./images/digital-comms-pam/nyquist-criterion.png"
       alt="Nyquist Criterion">
 
-##### 2.1.4.2.1. Raised-Cosine Filter
+#### 2.4.2.1. Raised-Cosine Filter
 
 **Raised-Cosine** filters are a family of filters that satisfy the Nyquist Criterion.
 They have an occupied bandwidth of:
@@ -359,7 +360,7 @@ $$
 
 </div>
 <div class="">
-<img class="80" src="./images/digital-comms/raised-cosine-filter.png"
+<img class="80" src="./images/digital-comms-pam/raised-cosine-filter.png"
       alt="Raised-Cosine Filter Frequency Response">
 </div>
 </div>
@@ -372,7 +373,7 @@ response.
 This has the _minimum Nyquist bandwidth_ of $B_{min} = \frac{1}{2T}$, but is
 not realizable in practice, since it would mean having an _infinite impulse response_.
 
-##### 2.1.4.2.2. Noise
+#### 2.4.2.2. Noise
 
 The receive filter shapes the complex baseband noise:
 
@@ -438,7 +439,7 @@ satisfy the two design objectives:
 2. **Matching Condition**: since the RRC filter is _real_ and _even_, $g_R(f)
   = g_T(f)$, meaning we have the same filter on both transmitter and receiver.
 
-##### 2.1.4.2.3. Bandwidth
+#### 2.4.2.3. Bandwidth
 
 If $G_T(f) = H_{RRC}(f,\alpha)$, and the symbol are _zero-mean_, the Power Spectral
 Density of the complex envelope signal is:
@@ -462,7 +463,7 @@ $$
 B_{PAM}^{(PB)} = 2 B_{PAM}^{(BB)} = (1 + \alpha) \frac{R_b}{\log_2{M}}
 $$
 
-##### 2.1.4.2.4. Power and Symbol Energy
+#### 2.4.2.4. Power and Symbol Energy
 
 For _zero-mean_ symbols and RRC filtering, the Power of the complex-envelope is:
 
@@ -501,7 +502,7 @@ The energy cost increases with $M^2$, while the bandwidth cost decreases with
 $\log_2{M}$, meaning that increasing $M$ has a worse effect on the energy efficiency
 than a good one on the spectral efficiency.
 
-##### 2.1.4.2.5. Noise Variance
+#### 2.4.2.5. Noise Variance
 
 The sample $n[m] = n_I[m] + j n_Q[m]$ is a _zero-mean complex Gaussian random variable_,
 with variance:
@@ -525,7 +526,7 @@ $$
 \sigma^2 = \sigma_{n_I}^2 = \sigma_{n_Q}^2 = \frac{1}{2}\sigma_n^2 = N_0
 $$
 
-#### 2.1.4.3. Decision Logic
+### 2.4.3. Decision Logic
 
 The receiver reduce the continuous-time communication system to an equivalent
 _discrete-time detection logic_, where the decision variable is:
@@ -580,8 +581,8 @@ p\left(x[m] \vert a^{(i)}\right) = \frac{1}{\sqrt{2\pi N_0}}
   e^{-\frac{\left(x[m] - a^{(i)}\right)^2}{2N_0}}
 $$
 
-The symbol $a^{(i)}$ that **maximizes** $p\left(x[m] \vert a^{(i)}\right)$ is
-the one that **minimizes** the distance between the symbol and the received sample:
+The symbol $a^{(i)}$ that **maximizes** $p\left(x[m] \vert a^{(i)}\right)$
+is the one that **minimizes** the distance between the symbol and the received sample:
 
 $$
 \hat{a}_m = \argmin_{a^{(i)} \in A}{\left\vert x[m] - a^{(i)}\right\vert}
@@ -604,5 +605,225 @@ $$
   \gamma_i = \frac{a^{(i)} + a^{(i+1)}}{2} \qquad i = 0,\dots, M-2
 $$
 
-<img class="60" src="./images/digital-comms/pam-decision-regions.png"
+<img class="60" src="./images/digital-comms-pam/pam-decision-regions.png"
       alt="PAM Decision Regions">
+
+## 2.5. PAM Error Probability
+
+We said that noise perturbs the received sample around the constellation point.
+If the perturbation moves $x[m]$ **outside the correct decision region**, we obtain
+an **_error_**.
+
+The conditional error probability is then:
+
+$$
+  P\left(e \vert a^{(i)}\right) = P\Set{x[m] \notin Z^{(i)} \; \Big\vert \;
+a_m = a^{(i)}}
+$$
+
+For _equiprobable symbols_, the average symbol error probability over the
+constellation is:
+
+$$
+  P_s = \frac{1}{M} \sum_{i=0}^{M-1}{P\left(e \vert a^{(i)}\right)}
+$$
+
+To compute the probability that $x[m]$ crosses a decision threshold, we can
+use the **Q-function**, a function that gives us the _upper-tail probability_
+of a _Standard Normal Distribution_:
+
+$$
+  Q(\alpha) = \frac{1}{\sqrt{2\pi}} \int_{\alpha}^{\infty}{e^{-\frac{u^2}{2}}\;du}
+$$
+
+Then, if $x \sim \mathcal{N}(\mu, \sigma^2)$, the probability that $x$ exceeds a
+threshold $t$ is:
+
+$$
+\begin{align*}
+P(x > t) &= Q\left(\frac{t - \mu}{\sigma}\right) \\
+P(x < t) &= 1 - Q\left(\frac{t - \mu}{\sigma}\right) =
+  Q\left(\frac{\mu - t}{\sigma}\right)
+\end{align*}
+$$
+
+Since we already shown that $x[m] \;\vert\; a_m = a^{(i)} \sim
+\mathcal{N}\left(a^{(i)}, N_0\right)$, we can say that the probability
+of _crossing a decision threshold_ $\gamma$ located at distance $d\left(a^{(i)},
+\gamma\right)$ from the symbol $a^{(i)}$ is:
+
+$$
+Q\left(\frac{d\left(a^{(i)}, \gamma\right)}{\sigma}\right)
+$$
+
+### 2.5.1. Error Probability for PAMs
+
+For `2-PAM`, each symbol has only **one decision threshold** at distance $1$ from
+both symbols, making the probability of error the same for both symbols:
+
+$$
+\begin{align*}
+  P\left(e \vert a^{(i)}\right) &= P\Set{x[m] \notin Z^{(i)}
+\;\Big\vert\; a_m = a^{(i)}} \\
+  &= Q\left(\frac{d\left(a^{(i)}, \gamma\right)}{\sigma}\right) \\
+  &= Q\left(\frac{1}{\sigma}\right) \\
+  &= Q\left(\frac{1}{\sqrt{N_0}}\right)
+\end{align*}
+$$
+
+<img class="50" src="./images/digital-comms-pam/2-pam-error-probability.png"
+      alt="2-PAM Error Probability">
+
+Unlike `2-PAM`, in `4-PAM` the error probability is not the same for all symbols:
+
+- **Outer symbols** have only **one decision threshold** at distance $1$ from
+  the symbol.
+- **Inner symbols** have **two decision thresholds**, each at distance $1$ from
+  the symbol.
+
+This means that the probability of error for the inner symbols is **twice**
+that of the outer symbols:
+
+$$
+\begin{align*}
+  P\left(e \vert a_{inner}\right) &= 2 Q\left(\frac{1}{\sigma}\right)\\
+  P\left(e \vert a_{outer}\right) &= Q\left(\frac{1}{\sigma}\right)
+\end{align*}
+$$
+
+In general, for a `M-PAM` constellation, the **inner symbols** have **two decision
+thresholds**, while the **outer symbols** have **one decision threshold**.
+
+Hence, the overall `M-PAM` error probability is:
+
+$$
+\begin{align*}
+  P_s &= \frac{1}{M} \left( (M-2) P\left(e \vert a_{inner}\right) +
+2 P\left(e\vert a_{outer}\right) \right) \\
+      &= \frac{1}{M} \left( (M-2) \cdot 2 Q\left(\frac{1}{\sigma}\right) +
+2 Q\left(\frac{1}{\sigma}\right) \right) \\
+      &= \frac{2(M-1)}{M} Q\left(\frac{1}{\sigma}\right)
+\end{align*}
+$$
+
+Note that all this formulas are valid only for constellations where symbol are
+**equi-probable**, **symmetric to $0$** and with distance $2$ between adjacent
+symbols.
+
+Thus, this error probability depends on the arbitrary scaling of the constellation.
+
+Therefore, to be able to compare _different modulation formats_ the performance
+is usually expressed in terms of the **normalized signal-to-noise ratio**
+$\frac{E_s}{N_0}$, where $E_s$ is the **average symbol energy** and $N_0$ is the
+**noise power spectral density**.
+
+To be able to do so:
+
+$$
+\begin{CD}
+\begin{align*}
+  \sigma^2 = N_0 \\
+  E_s = \frac{A}{2} = \frac{M^2 - 1}{6}
+\end{align*}
+@>>>
+{
+  \sigma^2 = N_0 \cdot 1 = N_0 \cdot \frac{6E_s}{M^2 - 1}
+}
+@>>>
+{
+  \frac{1}{\sigma} = \sqrt{\frac{M^2 - 1}{6} \cdot \frac{1}{N_0}}
+    = \sqrt{\frac{E_s}{N_0} \cdot \frac{6}{M^2 - 1}}
+}
+\end{CD}
+$$
+
+Meaning that the **general expression for the error probability of a `M-PAM`
+constellation** is:
+
+$$
+\begin{CD}
+\boxed{
+  P_s = \frac{2(M-1)}{M} Q\left(\sqrt{\frac{E_s}{N_0} \cdot \frac{6}{M^2 - 1}}\right)
+} \\
+@VVV \\
+\begin{align*}
+  P_s &= Q\left(\sqrt{\frac{E_s}{N_0} \cdot 2}\right) && M = 2 \\
+  P_s &= \frac{3}{2} Q\left(\sqrt{\frac{E_s}{N_0} \cdot \frac{2}{5}}\right) &&
+M = 4
+\end{align*}
+\end{CD}
+$$
+
+### 2.5.2. Gray Mapping
+
+The way we map the $q = \log_2{M}$ bits to the $M$ symbols of the constellation
+affects the **bit error**.
+
+For this reason we should find a mapping that **minimizes the bit error probability**,
+rather than the _symbol error probability_.
+
+This exists and is called **Gray Mapping**.
+
+A _Gray Mapping_ is a mapping that associates bit strings with constellation
+symbols so that **adjacent symbols** differ by **exactly one bit**.
+
+For example, if $M = 8$, meaning $q = 3$:
+
+<div class="flexbox" markdown="1">
+
+|     Symbol     | Bits  |
+| :------------: | :---: |
+| $a^{(0)} = -7$ | `000` |
+| $a^{(1)} = -5$ | `001` |
+| $a^{(2)} = -3$ | `011` |
+| $a^{(3)} = -1$ | `010` |
+| $a^{(4)} = 1 $ | `110` |
+| $a^{(5)} = 3 $ | `111` |
+| $a^{(6)} = 5 $ | `101` |
+| $a^{(7)} = 7 $ | `100` |
+
+</div>
+
+This mapping is particularly efficient because, when an error occurs, it typically
+affects only **one bit** of the transmitted symbol.
+
+Before, a symbol error could produce a bit sequence very different from the
+actual one.
+
+With Gray Mapping this is avoided, as a reasonable symbol error will typically
+produce an adjacent symbol, which differs by only one bit from the transmitted symbol.
+
+In particular, the energy per bit in this type of mapping is:
+
+$$
+\begin{CD}
+{
+  E_b = \frac{E_s}{\log_2{M}}
+}
+@>>>
+{
+  E_s = q E_b = \log_2{M} E_b
+}
+\end{CD}
+$$
+
+Meaning that with _Gray Mapping_ and at sufficiently high SNR, most symbol errors
+will cause only **one bit error**, making the **bit error probability** $P_b$
+approximately:
+
+$$
+P_b\approx \frac{1}{\log_2{M}} P_s = \frac{2(M-1)}{M\cdot \log_2{M}}
+  Q\left(\sqrt{\frac{E_s}{N_0} \cdot \frac{6}{M^2 - 1}}\right)
+$$
+
+For `2-PAM` _Gray Mapping_ does not change the bit error probability, since each
+symbol represents only one bit, but for `4-PAM` we can see that the bit error
+probability:
+
+$$
+\begin{matrix}
+\text{Symbol Error Probability} & \qquad & \text{Bit Error Probability} \\[1em]
+P_s = \frac{3}{2} Q\left(\sqrt{\frac{2}{5} \cdot \frac{E_s}{N_0}}\right)
+& \qquad & P_b = \frac{3}{4} Q\left(\sqrt{\frac{4}{5} \cdot \frac{E_s}{N_0}}\right)
+\end{matrix}
+$$

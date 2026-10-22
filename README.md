@@ -161,7 +161,7 @@ We will develope on the **ZYBO** (ZYnq BOard).
 1. [CMOS Combinatory Logic](./CMOS%20Combinatory%20Logic)
 
 **Note**: if you need, [on my github page](https://gabriele-d-cambria.github.io/Appunti-Elettronica-Digitale-2025-2026)
-I have posted notes (in italian) for the Bachelor degree course
+I have posted notes (in Italian) for the Bachelor degree course
 "Elettronica Digitale", that shares some arguments.
 
 ### Communications
@@ -169,10 +169,11 @@ I have posted notes (in italian) for the Bachelor degree course
 1. [Analog Communications](./Analog%20Communications)
 1. [Software Defined Radio](./Software%20Defined%20Radio)
 1. [Random Signals](./Random%20Signals)
-1. [Digital Communications](./Digital%20Communications)
+1. [Digital Communications - PAM](./Digital%20Communications%20-%20PAM)
+1. [Digital Communications - QAM](./Digital%20Communications%20-%20QAM)
 
-**Note**: if you need, [on my github page](https://gabriele-d-cambria.github.io/Appunti-Comunicazioni-Numeriche-2025-2026)
-I have posted notes (in italian) for the Bachelor degree course
+**Note**: if you need, [on my GitHub page](https://gabriele-d-cambria.github.io/Appunti-Comunicazioni-Numeriche-2025-2026)
+I have posted notes (in Italian) for the Bachelor degree course
 "Comunicazioni Numeriche", that shares some arguments.
 
 ### Lab
@@ -183,17 +184,15 @@ I have posted notes (in italian) for the Bachelor degree course
 
 These are personal notes, and are to be used for educational purpose only.
 
-The notes are based on Performance Evaluation of Computer Systems A.Y.
-2026-2027 lessons, teached by Prof. Giovanni Stea and Prof. Giovanni
-Nardini, and on the notes handed by the professors and available on
-the official temas and course website.
+The notes are based on Electronics and Communications Systems A.Y.
+2026-2027 lessons, taught by Prof. Luca Fanucci, Prof. Marco Moretti, Prof.
+Pietro Nannipieri and Prof. Tommaso Bocchi, and on the notes handed by the
+professors and available on the official teams and course website.
 I do not grant accuracy, completeness or updating.
 These are not official notes, and don't replace lessons or official educational
 material handed by the professors.
-didattico fornito dal professore.
 
 For any doubt, refer to official course material and professors instructions.
-alle indicazioni del docente.
 
 If you spot errors, you can report them either by GitHub issue or by contacting
 the author directly.
