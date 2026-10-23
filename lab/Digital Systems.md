@@ -4,6 +4,8 @@ title: Digital Systems
 
 # 1. Index
 
+<!--toc:start-->
+
 - [1. Index](#1-index)
 - [2. Digital Systems](#2-digital-systems)
   - [2.1. Verilog Hardware Description Language](#21-verilog-hardware-description-language)
@@ -19,6 +21,10 @@ title: Digital Systems
     - [2.3.1. Example: Full Adder](#231-example-full-adder)
     - [2.3.2. Example: DFC](#232-example-dfc)
     - [2.3.3. Example: ROM](#233-example-rom)
+  - [2.4. Finite State Machine (FSM)](#24-finite-state-machine-fsm)
+  - [2.5. Signals, Variables and Time](#25-signals-variables-and-time)
+  - [2.6. Simulations](#26-simulations) - [2.6.1. Test Bench](#261-test-bench)
+  <!--toc:end-->
 
 # 2. Digital Systems
 
@@ -560,7 +566,7 @@ begin
 end architecture;
 ```
 
-## Finite State Machine (FSM)
+## 2.4. Finite State Machine (FSM)
 
 **Finite State Machines (FSMs)** are a mathematical model of computation used
 to design digital systems that can be in one of a finite number of states at
@@ -651,7 +657,7 @@ begin
 end architecture;
 ```
 
-## Signals, Variables and Time
+## 2.5. Signals, Variables and Time
 
 In VHDL, signals and variables are used to represent data and control the flow
 of information within a design. However, they are two different concepts with
@@ -754,9 +760,9 @@ end architecture;
 </div>
 </div>
 
-## Simulations
+## 2.6. Simulations
 
-### Test Bench
+### 2.6.1. Test Bench
 
 A **Test Bench** is a model that is used to exercise and verify the
 correctness of a hardware model.
