@@ -159,6 +159,7 @@ We will develope on the **ZYBO** (ZYnq BOard).
 1. [IC Design Styles and Flows](./IC%20Design%20Styles%20and%20Flows)
 1. [Design Metric and Trade Offs](./Design%20Metrics%20and%20Trade%20Offs)
 1. [CMOS Combinatory Logic](./CMOS%20Combinatory%20Logic)
+1. [Timing Issues](./Timing%20Issues)
 
 **Note**: if you need, [on my github page](https://gabriele-d-cambria.github.io/Appunti-Elettronica-Digitale-2025-2026)
 I have posted notes (in Italian) for the Bachelor degree course
