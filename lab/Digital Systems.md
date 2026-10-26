@@ -563,7 +563,7 @@ architecture dataflow of LUT_32x8 is
 begin
   addr_int  <= to_integer(unsigned(addr));   -- convert std_logic_vector to integer
   datao     <= lut(addr_int);
-end architecture;
+end architecture;
 ```
 
 ## 2.4. Finite State Machine (FSM)

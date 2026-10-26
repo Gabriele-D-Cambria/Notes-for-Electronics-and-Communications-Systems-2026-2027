@@ -179,6 +179,7 @@ I have posted notes (in Italian) for the Bachelor degree course
 ### Lab
 
 1. [Digital Systems](./lab/Digital%20Systems)
+1. [Direct Digital Frequency Synthesizer](./lab/Direct%20Digital%20Frequency%20Synthesizer)
 
 ## 📜 Disclaimer
 
