@@ -202,4 +202,4 @@ the author directly.
 ## 📄 License
 
 This work is protected by copyright.
-Se [LICENSE](./LICENSE) for further details.
+See [LICENSE](./LICENSE) for further details.
