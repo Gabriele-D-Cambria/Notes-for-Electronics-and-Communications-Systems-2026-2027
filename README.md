@@ -130,7 +130,7 @@ questions about that questions.
 
 The questions on the exam will be picked from these handed questions.
 
-## Lab
+### Lab Structure
 
 In labs we will explore VHDL Simulation and Synthesis.
 
@@ -150,28 +150,28 @@ For the synthesis _AMD Vivado_ will be used, [downloadable from this link](http:
 During the Lab we will design from scratch a complete digital system, from
 requirements to the implementation on a FPGA Board and its test.
 
-We will develope on the **ZYBO** (ZYnq BOard).
+We will develop on the **ZYBO** (ZYnq BOard).
 
 ## 📖 Suggested Study Order
 
 ### Electronics
 
-1. [IC Design Styles and Flows](./IC%20Design%20Styles%20and%20Flows)
-1. [Design Metric and Trade Offs](./Design%20Metrics%20and%20Trade%20Offs)
-1. [CMOS Combinatory Logic](./CMOS%20Combinatory%20Logic)
-1. [Timing Issues](./Timing%20Issues)
+1. [IC Design Styles and Flows](./electronics/IC%20Design%20Styles%20and%20Flows)
+1. [Design Metric and Trade Offs](./electronics/Design%20Metrics%20and%20Trade%20Offs)
+1. [CMOS Combinatory Logic](./electronics/CMOS%20Combinatory%20Logic)
+1. [Timing Issues](./electronics/Timing%20Issues)
 
-**Note**: if you need, [on my github page](https://gabriele-d-cambria.github.io/Appunti-Elettronica-Digitale-2025-2026)
+**Note**: if you need, [on my GitHub page](https://gabriele-d-cambria.github.io/Appunti-Elettronica-Digitale-2025-2026)
 I have posted notes (in Italian) for the Bachelor degree course
 "Elettronica Digitale", that shares some arguments.
 
 ### Communications
 
-1. [Analog Communications](./Analog%20Communications)
-1. [Software Defined Radio](./Software%20Defined%20Radio)
-1. [Random Signals](./Random%20Signals)
-1. [Digital Communications - PAM](./Digital%20Communications%20-%20PAM)
-1. [Digital Communications - QAM](./Digital%20Communications%20-%20QAM)
+1. [Analog Communications](./communications/Analog%20Communications)
+1. [Software Defined Radio](./communications/Software%20Defined%20Radio)
+1. [Random Signals](./communications/Random%20Signals)
+1. [Digital Communications - PAM](./communications/Digital%20Communications%20-%20PAM)
+1. [Digital Communications - QAM](./communications/Digital%20Communications%20-%20QAM)
 
 **Note**: if you need, [on my GitHub page](https://gabriele-d-cambria.github.io/Appunti-Comunicazioni-Numeriche-2025-2026)
 I have posted notes (in Italian) for the Bachelor degree course
