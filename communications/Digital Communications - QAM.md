@@ -183,8 +183,9 @@ The symbol error probability in this case is:
 
 $$
 \begin{align*}
-  P_s^{(4-QAM)} &= \frac{1}{4} \sum_{i=0}^3{P\left(e\;\vert\;c^{(i)}\right)} \\
-    &= \frac{1}{4} \cdot 4 P\left(e\;\vert\;c^{(0)}\right) \\
+  P_s^{(4-QAM)} &= \frac{1}{4} \sum_{i=0}^3{P\left(e\;\middle\vert\;c^{(i)}
+\right)} \\
+    &= \frac{1}{4} \cdot 4 P\left(e\;\middle\vert\;c^{(0)}\right) \\
     &= 2 \cdot P^{(2-PAM)} - \left(P^{(2-PAM)}\right)^2 \\
     &\approx 2 \cdot P^{(2-PAM)} = 2 \cdot Q\left(\frac{1}{\sigma}\right)
 \end{align*}
@@ -251,3 +252,19 @@ $$
 P_b \approx 2 \frac{\sqrt{M} - 1}{\sqrt{M} \log_2{M}} \cdot
   Q\left(\sqrt{\frac{3 \log_2{M}}{M - 1} \cdot \frac{E_b}{N_0}}\right)
 $$
+
+If we want to actually calculate the bit error probability for a `4-QAM`
+and `16-QAM` signal, the formula becomes:
+
+$$
+\def\arraystretch{1.5}
+\begin{array}{c:c}
+  M = 4 & M = 16 \\ \hline
+  P_b \approx Q\left(\sqrt{\frac{2E_b}{N_0}}\right) &
+P_b \approx \frac{3}{4} Q\left(\sqrt{\frac{4E_b}{5N_0}}\right) \\
+  \text{Equivalent to a } 2-PAM & \text{Equivalent to a } 4-PAM
+\end{array}
+$$
+
+<img class="" src="./images/digital-comms-qam/qam-bit-error-probability.png"
+      alt="QAM Bit Error Probability">
