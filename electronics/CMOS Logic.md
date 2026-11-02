@@ -1,5 +1,5 @@
 ---
-title: CMOS Combinatory Logic
+title: CMOS Logic
 ---
 
 # 1. Index
@@ -7,7 +7,7 @@ title: CMOS Combinatory Logic
 <!--toc:start-->
 
 - [1. Index](#1-index)
-- [2. CMOS Combinatory Logic](#2-cmos-combinatory-logic)
+- [2. CMOS Logic](#2-cmos-logic)
   - [2.1. Logic Circuits](#21-logic-circuits)
   - [2.2. Finite State Machines](#22-finite-state-machines)
     - [2.2.1. Static Logic (Hard Node)](#221-static-logic-hard-node)
@@ -17,8 +17,11 @@ title: CMOS Combinatory Logic
     - [2.3.2. Complementary CMOS](#232-complementary-cmos)
       - [2.3.2.1. Inverter Chain](#2321-inverter-chain)
     - [2.3.3. Manchester Carry Chain](#233-manchester-carry-chain)
+  - [2.4. Dynamic Logic](#24-dynamic-logic)
+    - [2.4.1. NAND Dynamic Logic](#241-nand-dynamic-logic)
+    <!--toc:end-->
 
-# 2. CMOS Combinatory Logic
+# 2. CMOS Logic
 
 Before talking to **complementary CMOS logic**, let's make a review to some definitions.
 
@@ -291,3 +294,119 @@ $$
 This way not only we will not suffer from **Threshold Voltage Drop**, since the
 buffer act as a _feedback circuit_ regenerating the signal, but we will also
 have a **lower linear delay** than simply having a full $N$ transistor chain.
+
+## 2.4. Dynamic Logic
+
+We saw how **Complementary CMOS** is a _static logic_ circuit made by two dual
+circuits (PUN and PDN), that benefits from no threshold voltage drop and the
+maximum noise margin.
+
+It doesn't suffer from any static power consumption, has several
+possible TR sizing fro $t_{p_{HL}} = t_{p_{LH}}$ and has a _rail-to-rail_ output.
+
+Its complexity for a logic function with $N$ inputs is $2N$, meaning that it is
+**not scalable**.
+
+<div class="grid2">
+<div class="">
+
+**Dynamic Logic** instead is a _soft node_ circuit that benefits from a
+**single network** implementation (PDN), just like the image on the right.
+
+It is piloted by a `clk` signal that handles one `NMOS` and one `PMOS` transistor.
+
+When `clk = 0`, the `PDN` is connected to $GRN$ with the `PMOS` open,
+while when `clk = 1` we have a path to $V_{DD}$ and the `NMOS` open.
+
+We call the phase when `clk = 0` **precharge phase**, while when `clk = 1`
+is called **evaluation phase**.
+
+It is when `clk = 1` that we actually **read the value** of the logic
+function, while when `clk = 0` we **store the value** in the parasitic
+capacitance of the output node.
+
+</div>
+<div class="">
+<img class="70" src="./images/cmos-logic/dynamic-logic.png"
+      alt="Dynamic Logic">
+</div>
+</div>
+
+This architecture has ad an _advantage_ over the hard-node approach for the **number
+of NMOS** (which goes from $2 \cdot NMOS$ to $NMOS + 2$) as well as for the
+**reduced input capacitance** (since we have at least half the number of transistors).
+
+We must also consider that in this schema, our output will only be valid for
+`clk = 1`, without considering that for that phase the input **will have to be stable**.
+
+Another issue that arises with Dynamic Logic is when we have a **Cascade of two
+dynamic logic gates**.
+
+What happens is well shown in the following waveform, where we suppose our
+second dynamic logic gate to be a just a `NMOS`.
+
+The first network brings `X` to `0` when `clk = 1`. The problem is that during
+the pre-charge, before discharging `X` the signal in input of the second
+network will start to discharge it as well.
+
+<img class="40" src="./images/cmos-logic/dynamic-logic-cascade.png"
+      alt="Dynamic Logic Cascade">
+
+There are two different ways to solve this issue:
+
+<div class="grid2">
+<div class="top">
+<p class="subt">Domino Logic Scheme</p>
+
+<img class="" src="./images/cmos-logic/domino-logic.png"
+      alt="Domino Logic">
+
+The problem with this approach is that it is impossible to actually **implement
+negative functions**
+
+</div>
+<div class="top">
+<p class="subt">Domino P-N</p>
+
+<img class="" src="./images/cmos-logic/domino-pn.png"
+      alt="Domino P-N">
+
+We get from the first network both the direct signal (_Domino P_) and the
+inverted one (_Domino N_).
+
+This allows us to make the second network a **static logic** circuit, that will
+be able to read the value of the first network without any issues.
+
+This way we can implement **negative functions**.
+
+</div>
+</div>
+
+### 2.4.1. NAND Dynamic Logic
+
+We say that we can implement a NAND gate in Complementary CMOS:
+
+<img class="40" src="./images/cmos-logic/4-nand-cmos.png"
+      alt="4-NAND CMOS">
+
+We can now see a possible implementation of a 4-input NAND gate in Dynamic Logic:
+
+<img class="30" src="./images/cmos-logic/4-nand-dynamic.png"
+      alt="4-NAND Dynamic Logic">
+
+We can draw a comparison between the two implementations:
+
+<div class="flexbox" markdown="1">
+
+|     Style     | # Transistor | Area $(\mu m^2)$ | Propagation Delay $(ns)$ |
+| :-----------: | :----------: | :--------------: | :----------------------: |
+| Complementary |      8       |       533        |           0.61           |
+|    Dynamic    |      6       |       212        |           0.37           |
+
+</div>
+
+If we analyze the two implementation, it might seem like the PDN network of the
+complementary CMOS has a lower capacitance, since it has one less transistor,
+but the point that makes the Dynamic Logic implementation faster is that the overall
+**load capacitance** is lower, since the output node is connected to $V_{DD}$
+only during the evaluation phase.
