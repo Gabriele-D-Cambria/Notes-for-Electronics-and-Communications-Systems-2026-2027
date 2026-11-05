@@ -173,6 +173,7 @@ I have posted notes (in Italian) for the Bachelor degree course
 1. [Random Signals](./communications/Random%20Signals)
 1. [Digital Communications - PAM](./communications/Digital%20Communications%20-%20PAM)
 1. [Digital Communications - QAM](./communications/Digital%20Communications%20-%20QAM)
+1. [Wireless Propagation Channel](./communications/Wireless%20Propagation%20Channel)
 
 **Note**: if you need, [on my GitHub page](https://gabriele-d-cambria.github.io/Appunti-Comunicazioni-Numeriche-2025-2026)
 I have posted notes (in Italian) for the Bachelor degree course
