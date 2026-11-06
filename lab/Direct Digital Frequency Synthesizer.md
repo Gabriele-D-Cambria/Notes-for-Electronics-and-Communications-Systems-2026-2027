@@ -11,6 +11,7 @@ title: Direct Digital Frequency Synthesizer
   - [2.1. System Description](#21-system-description)
   - [2.2. Frequency Quantization](#22-frequency-quantization)
   - [2.3. Amplitude Quantization](#23-amplitude-quantization)
+  - [2.4. LUT Optimization](#24-lut-optimization)
   <!--toc:end-->
 
 # 2. Direct Digital Frequency Synthesizer
@@ -99,3 +100,20 @@ $$
   y_q(k) = LSB_A \cdot \left[\frac{y(k)}{LSB_A}\right] && k \in [0; 2^N - 1]
 \end{align*}
 $$
+
+## 2.4. LUT Optimization
+
+Since we are writing the architecture in VHDL, we can exploit some properties
+of the system we are trying to implement.
+
+In particular, we can notice that the $\sin$ function has a **quadrangular-symmetrical**
+profile.
+
+This means that, instead of having a huge look-up table with $2^N$ value, we can
+just use the first quarter `LUT0`, adjusting:
+
+- **Access modality**: normal or reverse (complement)
+- **Amplitude polarity**: plain or complemented
+
+<img class="" src="./images/DDFS/LUT-optimization.png"
+      alt="LUT Optimization">
