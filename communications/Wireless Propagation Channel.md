@@ -15,7 +15,15 @@ title: Wireless Propagation Channel
     - [2.1.2. Small-Scale Fading: Multipath Propagation](#212-small-scale-fading-multipath-propagation)
       - [2.1.2.1. Reyleigh Fading](#2121-reyleigh-fading)
       - [2.1.2.2. Time Dispersion](#2122-time-dispersion)
-      <!--toc:end-->
+    - [2.1.3. Coherence Bandwidth](#213-coherence-bandwidth)
+      - [2.1.3.1. Example: two-ray channel mode](#2131-example-two-ray-channel-mode)
+    - [2.1.4. Inter Symbol Interference](#214-inter-symbol-interference)
+    - [2.1.5. BER Benchmark](#215-ber-benchmark)
+      - [2.1.5.1. Additive White Gaussian Noise Channel](#2151-additive-white-gaussian-noise-channel)
+      - [2.1.5.2. Flat Fading Channel](#2152-flat-fading-channel)
+      - [2.1.5.3. Multipath Fading Channel](#2153-multipath-fading-channel)
+    - [2.1.6. Time Varying Channel and Doppler Shift](#216-time-varying-channel-and-doppler-shift)
+    <!--toc:end-->
 
 # 2. Wireless Propagation Channel
 
@@ -399,4 +407,385 @@ $$
   \overline{\tau} &= \sum_{l} p_l \cdot \tau_l \\
   \sigma_\tau &= \sqrt{\sum_{l} p_l \cdot (\tau_l - \overline{\tau})^2}
 \end{align*}
+$$
+
+### 2.1.3. Coherence Bandwidth
+
+In the frequency domain, convolution with the multipath channel
+becomes multiplication:
+
+$$
+  Y(f) = S(f)H(f)
+$$
+
+Where $Y(f)$ is the frequency response of the received signal, $S(f)$ the one
+of the transmitted signal, and $H(f)$ the channel frequency response.
+
+If we had a single path component, the channel frequency response would be **flat**:
+
+$$
+h(t) = \alpha \cdot e^{j\phi} \cdot \delta(t-\tau) \quad \Leftrightarrow \quad
+H(f) = \alpha \cdot e^{j\phi} \cdot e^{-j2\pi f\tau} \quad \rightarrow \quad
+\vert H(f) \vert = \alpha
+$$
+
+But since we now take into consideration to have multiple resolvable multipath
+components, the channel frequency response must take into account all of them:
+
+$$
+H(f) = \sum_{l=0}^{L-1} {\alpha_l \cdot e^{j\phi_l} \cdot e^{-j2\pi f\tau_l}}
+$$
+
+Thus, different propagation delays will produce different _frequency-dependent
+phase shifts_, whose superposition makes both the magnitude and phase of
+$H(f)$ vary with frequency.
+
+We define the **coherence bandwidth** $B_c$ the frequency interval
+over which _the channel frequency response **remains strongly correlated**_.
+
+$$
+B_c \approx \frac{1}{5\sigma_\tau} \quad [Hz]
+$$
+
+> [!WARNING]
+> Note that this relation is an **approximation**. The numerical factor
+> depends on the _correlation criterion_.
+
+If our signal has a bandwidth $B$:
+
+- $B \ll B_c$: the channel is **frequency-flat**. This means that all frequency
+  components of the signal experience the same channel gain and phase shift.
+- $B \ge B_c$: the channel is **frequency-selective**. This means that different
+  frequency components of the signal experience different channel gains and phase
+  shifts.
+
+<img class="40" src="./images/wpc/coherence_bandwidth.png"
+    alt="Coherence Bandwidth">
+
+We can also see this relation in the _time domain_, taking in relevance the delay
+spread $\sigma_\tau$ of the channel impulse response and the overall transmission
+duration $T$:
+
+$$
+\begin{align*}
+  \sigma_\tau \ll T &\Leftrightarrow B_c\gg B && \text{(frequency-flat)} \\
+  \sigma_\tau \ge T &\Leftrightarrow B_c\le B && \text{(frequency-selective)}
+\end{align*}
+$$
+
+The RMS delay spread depends strongly on the propagation environment and geometry.
+
+A delay spread of $5\;\mu s$ corresponds to the coherence bandwidth of $B_c
+\approx 40\;kHz$.
+
+Typical approximated values of RMS delay spread and coherence bandwidth for
+different propagation environments are the following:
+
+<div class="flexbox" markdown="1">
+
+|     Environment     | Typical $\sigma_\tau$ $\mu s$ | Approx. $B_c$ $MHz$ |
+| :-----------------: | :---------------------------: | :-----------------: |
+| **Rural/open area** |         $0.05 - 0.3$          |      $0.7 - 4$      |
+|  **Indoor office**  |         $0.01 - 0.1$          |       $2- 20$       |
+| **Urban Microcell** |           $0.1 - 1$           |      $0.2 - 2$      |
+| **Urban Macrocell** |            $1 - 5$            |    $0.04 - 0.2$     |
+
+</div>
+
+#### 2.1.3.1. Example: two-ray channel mode
+
+<div class="grid2">
+<div class="">
+
+Suppose we have a channel impulse response:
+
+$$
+h(t) = \alpha_0 \cdot e^{j\phi_0} \cdot \delta(t-\tau_0) +
+\alpha_1 \cdot e^{j\phi_1} \cdot \delta(t-\tau_1) \qquad \tau_1 > \tau_0
+$$
+
+Choosing the first arrival as the delay and phase reference, we can set:
+
+$$
+\begin{cases}
+  \tau_0 = 0 & \phi_0 = 0 \\
+  \tau_1 = \tau & \phi_1 = \phi
+\end{cases}
+$$
+
+To isolate the effect of the _relative delay_, we can also set the phase
+shift of the second path to zero: $\phi = 0$.
+
+</div>
+<div class="">
+<img class="80" src="./images/wpc/two_ray_channel_model.png"
+    alt="Two-Ray Channel Model">
+</div>
+</div>
+
+This means that the channel impulse response can be expressed as:
+
+$$
+h(t) = \alpha_0 \cdot \delta(t) + \alpha_1 \cdot \delta(t-\tau) \quad
+\Leftrightarrow \quad H(f) = \alpha_0 + \alpha_1 \cdot e^{-j2\pi f\tau}
+$$
+
+Having $alpha_0 = 1$ and $alpha_1 = 0.9$, we can calculate the mean value
+of the delay spread:
+
+$$
+\begin{align*}
+  \overline{\tau} &= \sum_{l=0}^1{p_l \cdot \tau_l} \\
+    &= p_0 \cdot \tau_0 + p_1 \cdot \tau_1 \\
+    &= p_0 \cdot \tau_0 + (1 - p_0) \cdot \tau_1 \\
+    &= \frac{1}{1+0.9^2} \cdot 0 + (\frac{0.9^2}{1+0.9^2}) \cdot \tau \\
+    &= 0.45 \cdot \tau  = p_1 \tau
+\end{align*}
+$$
+
+As for the RMS delay spread, we can calculate it as:
+
+$$
+\begin{align*}
+  \sigma_\tau &= \sqrt{\sum_{l=0}^1{p_l \cdot (\tau_l - \overline{\tau})^2}} \\
+    &= \sqrt{p_0 \cdot (\tau_0 - \overline{\tau})^2 + p_1 \cdot (\tau_1 -
+\overline{\tau})^2} \\
+    &= \sqrt{p_0 \cdot (0 - p_1\tau)^2 + p_1 \cdot (\tau - p_1\tau)^2} \\
+    &= \sqrt{p_0 \cdot (p_1\tau)^2 + p_1 \cdot (p_1 \tau)^2} \\
+    &= \tau \cdot \sqrt{p_0 p_1^2 + p_1 p_0^2} \\
+    &= \tau \cdot \sqrt{p_0 p_1 (p_1 + p_0)} \\
+    &= \tau \cdot \sqrt{p_0 p_1} \\
+    &= 0.5 \cdot \tau
+\end{align*}
+$$
+
+We can then calculate the relative coherence bandwidth for
+several values of $\tau$:
+
+<div class="flexbox" markdown="1">
+
+| Relative Delay |    Norm. Delay Spread    | Norm. Coherence Bandwidth  |
+| :------------: | :----------------------: | :------------------------: |
+|  $\tau=0.1T$   | ${\sigma_\tau/ T}= 0.05$ |  ${B_c\cdot T}\approx 4$   |
+|    $\tau=T$    | ${\sigma_\tau/ T}= 0.5$  | ${B_c\cdot T}\approx 0.4$  |
+|  $\tau=1.5T$   | ${\sigma_\tau/ T}= 0.75$ | ${B_c\cdot T}\approx 0.27$ |
+|   $\tau=4T$    |  ${\sigma_\tau/ T}= 2$   | ${B_c\cdot T}\approx 0.1$  |
+
+</div>
+
+### 2.1.4. Inter Symbol Interference
+
+As we saw when we were talking about the _baseband transmission model_,
+when sending a signal, after transmit filtering, propagation and receive filtering,
+the effective pulse shape $g(t)$ is:
+
+$$
+g(t) = g_t(t) \otimes h(t) \otimes g_r(t) = g_N(t) \otimes h(t)
+$$
+
+Neglecting the effect of noise, the receive signal can then be expressed as:
+
+$$
+x(t) = \sum_i {c_i \cdot g(t-iT)}
+$$
+
+Meaning that the received signal is a **superposition of delayed and scaled
+transmitted pulses**.
+
+If we sample at $t = mT$, the decision variable $x[m]$ is:
+
+$$
+\begin{align*}
+  x[m] &= \sum_i {c_i \cdot g(mT-iT)} \\
+    &= c_m \cdot g(0) + \sum_{i\neq m} {c_i \cdot g((m-i)T)} \\
+    &= c_m + \sum_{i\neq m} {c_i \cdot g((m-i)T)}
+\end{align*}
+$$
+
+We call the second term **Inter-Symbol Interference (ISI)**, which is the
+interference due to other symbols in the same transmission.
+
+In **multipath channels** the zero-ISI condition of the Nyquist criterion
+is **_generally not satisfied_**:
+
+$$
+g(kT) = \sum_{l=0}^{L-1} {\alpha_l \cdot e^{j\phi_l} \cdot g_N(kT-\tau_l)} \neq
+0
+$$
+
+This is because the interference is not due to the transmission of other
+signal, but to the multipath propagation of the same signal.
+
+### 2.1.5. BER Benchmark
+
+#### 2.1.5.1. Additive White Gaussian Noise Channel
+
+With a AWGN channel, the decision variable
+is:
+
+$$
+x[m] = c_m + n[m]
+$$
+
+If _no fading_ and _no ISI_ are present, the BER (Bit Error Rate) is a function
+of the SNR (Signal-to-Noise Ratio), as we saw before in the _baseband transmission
+model_.
+
+With a **constant channel gain** $\vert h[m] \vert| = 1$ we do not
+impact the SNR.
+
+<img class="40" src="./images/wpc/ber_awgn.png"
+    alt="BER vs SNR for AWGN Channel">
+
+#### 2.1.5.2. Flat Fading Channel
+
+In a **flat fading channel**, assuming coherent detection and phase
+compensation, the decision variable is:
+
+$$
+x[m] = \alpha c_m + n[m]
+$$
+
+The channel amplitude $\alpha$ is a **Rayleigh distributed RV**, normalized
+such that $E\Set{\alpha^2} = 1$.
+
+The mean error probability is thus obtained by averaging the error probability over
+the channel:
+
+$$
+\begin{align*}
+  P_e &= \int_0^{\infty} P(e \vert \alpha)\cdot p(\alpha) d\alpha \\
+      &= \int_0^{\infty} Q\left(\frac{\alpha}{\sigma}\right) \cdot p(\alpha) d\alpha
+\end{align*}
+$$
+
+This type of channel does not introduce ISI, but **random instantaneous SNR** due
+to the fading amplitude $\alpha$.
+
+<img class="40" src="./images/wpc/ber_flat_fading.png"
+    alt="BER vs SNR for Flat Fading Channel">
+
+Assuming a coherent detection and phase compensation, in a 2-PAM the decision
+variable is:
+
+$$
+x = \alpha a + n
+$$
+
+The PDF of $\alpha$ is:
+
+$$
+p(\alpha) = \frac{\alpha}{\sigma^2} \cdot e^{-\frac{\alpha^2}{2\sigma^2}},
+\quad \alpha \ge 0
+$$
+
+If we normalize such that $\sigma^2 = \frac{1}{2}$, we have:
+
+$$
+E\Set{\alpha^2} = 2\sigma^2 = 1 \qquad \Rightarrow \quad
+p(\alpha) = 2\alpha \cdot e^{-\alpha^2}, \quad \alpha \ge 0
+$$
+
+This means that, for a given value of $\alpha$, the conditional
+error probability for a 2-PAM is:
+
+$$
+P(e\vert \alpha) = Q\left(\alpha\sqrt{\frac{2E_s}{N_0}}\right)
+$$
+
+Hence, the error probability:
+
+$$
+\begin{align*}
+  P_e &= \int_0^{\infty} P(e \vert \alpha)\cdot p(\alpha) d\alpha \\
+      &= \int_0^{\infty} Q\left(\alpha\sqrt{\frac{2E_s}{N_0}}\right) \cdot
+        2\alpha e^{-\alpha^2} d\alpha
+\end{align*}
+$$
+
+Since $2\alpha e^{-\alpha^2} = -\frac{d}{d\alpha} e^{-\alpha^2}$, we can integrate
+by parts.
+
+We first have to compute the derivative of the Q-function:
+
+$$
+\begin{align*}
+  Q(x) &= \frac{1}{\sqrt{2\pi}} \int_x^{\infty} e^{-\frac{t^2}{2}} \\
+       &\Downarrow \\
+  \frac{d}{dx} Q(x) &= -\frac{1}{\sqrt{2\pi}} e^{-\frac{x^2}{2}}
+\end{align*}
+$$
+
+Solving the integral, and replacing $\mu = \sqrt{\frac{2E_s}{N_0}}$, we have:
+
+$$
+\begin{align*}
+  P(e) &= -e^{-\alpha^2} Q(\mu \alpha) \Big\vert_0^{\infty} -
+\int_0^{\infty} {\left(-e^{-\alpha^2}\right) \cdot \left(-\frac{\mu}{\sqrt{2\pi}}
+e^{-\frac{\mu^2 \alpha^2}{2}}\right) d\alpha} \\
+  &= \left(0 + \frac{1}{2}\right) - \frac{\mu}{\sqrt{2\pi}}
+\int_0^{\infty} {e^{-\frac{\alpha^2(2 + \mu^2)}{2}} d\alpha} \\
+\end{align*}
+$$
+
+Substituting $\beta = \alpha \sqrt{\left(2 + \mu^2\right)} \to d\alpha =
+\frac{1}{\sqrt{\left(2 + \mu^2\right)}} d\beta$, we have:
+
+$$
+\begin{align*}
+  P(e) &= \frac{1}{2} - \frac{\mu}{\sqrt{2\pi(2 + \mu^2)}} \frac{1}{\sqrt{2\pi}}
+\int_0^{\infty} {e^{-\frac{\beta^2}{2}} d\beta} \\
+  &= \frac{1}{2} - \frac{\mu}{\sqrt{2 + \mu^2}} \cdot \frac{1}{\sqrt{2\pi}}
+\frac{\sqrt{2\pi}}{2} \\
+  &= \frac{1}{2} \left(1 - \frac{\mu}{\sqrt{2 + \mu^2}}\right) \\
+  &= \frac{1}{2} \left(1 - \sqrt{\frac{E_s/N_0}{1 + E_s/N_0}}\right)
+\end{align*}
+$$
+
+For large $x$ we can use the approximation $\sqrt{\frac{x}{1+x}} \approx
+1 - \frac{1}{2x}$, which means that for **large SNR values** the probability
+of error can be approximated as:
+
+$$
+\begin{align*}
+  P(e) &\approx\frac{1}{2}\left(1 - \left(1 - \frac{1}{2E_s/N_0}\right)\right) \\
+       &= \frac{1}{4E_s/N_0} \\[2em]
+  (P(e))_{dB} &= 10 \cdot \log_{10}{\left(\frac{1}{4E_s/N_0}\right)} \\
+    &= -10 \cdot \log_{10}{\left(E_s/N_0\right)} - 10 \cdot \log_{10}{4} \\
+    &= -10 \cdot \log_{10}{\left(4E_s/N_0\right)} \\
+    &\approx -\log_{10}{\left(E_s/N_0\right)}
+\end{align*}
+$$
+
+Meaning that the error probability decreases **inversely proportional to the SNR**
+(in dB scale).
+
+#### 2.1.5.3. Multipath Fading Channel
+
+With a frequency selective channel, the decision variable is:
+
+$$
+x[m] = g(0)c_m + \sum_{i\neq m} {g((m-i)T)c_i} + n[m]
+$$
+
+If we do not take any countermeasures, the ISI term will dominate the error
+probability, producing an **irreducible error floor**.
+
+<img class="40" src="./images/wpc/ber_multipath_fading.png"
+    alt="BER vs SNR for Multipath Fading Channel">
+
+### 2.1.6. Time Varying Channel and Doppler Shift
+
+If the transmitter, receiver or surrounding scatterers are moving, the propagation
+paths change with time, making the channel **time varying**.
+
+Large-scale fading is typically assumed constant over the observation interval,
+thus its omitted.
+
+Over a sufficiently short observation interval, the path delays can be regarded
+as **approximately constant**, while the complex path gains vary with time:
+
+$$
+h(t, \tau) = \sum_{l=0}^{L-1} {\alpha_l(t) \cdot e^{j\phi_l(t)}
+\cdot \delta(\tau-\tau_l)}
 $$
