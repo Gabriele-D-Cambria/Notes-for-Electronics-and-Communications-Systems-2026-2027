@@ -411,11 +411,18 @@ $$
 T_{CK} \ge t_{c-q} + 4 t_C + t_{su}
 $$
 
+<figure class="100">
 <img class="40" src="./images/arithmetic/pipeline_unpipelined.png"
       alt="Unpipelined 4-bit Adder" />
+<figcaption>
+
+This implementations requires a total of **14** D-Flip-Flops.
+
+</figcaption>
+</figure>
 
 By adding a pipeline register on the middle carry line $C_1$, and appropriately
-deskewing the inputs ($A_{3-2}, B_{3-2}$) and outputs ($S_{1-0}$) with
+skewing the inputs ($A_{3-2}, B_{3-2}$) and outputs ($S_{1-0}$) with
 matching registers, we halve the combinational path:
 
 $$
@@ -424,6 +431,21 @@ $$
 
 <img class="40" src="./images/arithmetic/pipeline_2stage.png"
       alt="2-Stage Pipelined 4-bit Adder" />
+
+We can compare the two solutions in terms of **throughput** and **latency**
+for a generic $N$-bit **RCA** with $n$ pipeline stages:
+
+<div class="flexbox" markdown="1">
+
+|                | Unpipelined | Pipelined | $T_{CK} - t_{cq} - t_{su}$ |
+| :------------: | :---------: | :-------: | :------------------------: |
+| **throughput** |     $1$     |    $1$    |          $n t_C$           |
+|  **latency**   |     $1$     |    $2$    |         $n/2 t_C$          |
+
+</div>
+
+Of course, we can always add more pipeline stages to further reduce the combinational path,
+but that will come with more **latency** and more **hardware cost**.
 
 ## 2.6. Subtractor and Adder-Subtractor
 
@@ -434,7 +456,7 @@ $$
 D = A - B = A + (-B) = A + B^* + 1
 $$
 
-where $B^*$ is the bitwise complement ($\overline{B}$) of $B$.
+Where $B^*$ is the bitwise complement ($\overline{B}$) of $B$.
 
 We can easily transform a 4-bit **Adder** into a **Subtractor** by inverting
 the $B$ inputs and setting the initial carry-in to $C_{in} = 1$.
@@ -478,7 +500,7 @@ $$
 
 An **Arithmetic Logic Unit** (**ALU**) extends the adder architecture to
 perform both arithmetic and bitwise logic operations using **Pass-Transistor
-Logic** (**PTL**) / **Programmable TSA** blocks.
+Logic** (**PTL**) / **Programmable TSA** blocks (_Transistor Switch Array_).
 
 A 4-to-1 **PTL** multiplexer controlled by inputs $A$ and $B$ takes four
 programming bits $G_{3-0}$ to synthesize any of the $16$ possible boolean
@@ -534,8 +556,8 @@ $S_i$) with a carry stage controlled by an enable signal $\Phi$, we build a
       alt="1-bit ALU Slice" />
 
 For instance, setting the programming codes to $\text{HEX } 8$ ($G_i = A_i B_i$),
-$\text{HEX } 6$ ($P_i = A_i \oplus B_i$), and $\text{HEX } 6$
-($S_i = P_i \oplus C_i$) configures the **ALU** as a **Full Adder**.
+$\text{HEX } 6$ ($P_i = A_i \oplus B_i$ and $S_i = P_i \oplus C_i$) configures
+the **ALU** as a **Full Adder**.
 
 Cascading $N$ blocks yields an $N$-bit **ALU**, where the programming bits
 act as the _microcode_ selecting the active operation (**Adder**,
@@ -555,12 +577,28 @@ $$
 Implementing a $16 \times 16$ multiplier via a **ROM Lookup Table** is
 unfeasible, as it would require $32$ address bits and $2^{32}$ words of $32$
 bits, resulting in a $16\ \text{GB}$ **ROM**.
+Which can become problematic for both price and access time (since
+it grows with the more bits we have).
 
 Instead, we evaluate all partial products $x_i y_j$ in parallel using **AND**
 gates and sum them across an **Array Multiplier** structure.
 
+<figure class="100">
 <img class="40" src="./images/arithmetic/multiplier_partial_products.png"
       alt="Parallel Multiplier Partial Products" />
+
+<figcaption>
+
+This figure is **a lot generous**, since we don't actually need all
+those full adders.<br>
+In many case we can use simple _half-adders_ or even just omit the
+adder entirely (we are summing with fixed $0$ value).
+
+</figcaption>
+</figure>
+
+<div class="grid2">
+<div class="">
 
 To build a modular $N \times N$ **Parallel Multiplier**, we define five basic
 cells:
@@ -576,8 +614,12 @@ cells:
 - **Basic Block 5 (Product + Full Adder)**: computes $x \cdot y$ and adds it
   to $a$ and $c_i$ via a **Full Adder**.
 
-<img class="40" src="./images/arithmetic/multiplier_basic_blocks.png"
+</div>
+<div class="">
+<img class="60" src="./images/arithmetic/multiplier_basic_blocks.png"
       alt="Multiplier Basic Blocks 1 to 5" />
+</div>
+</div>
 
 Connecting these blocks in a regular 2D grid forms the complete **Parallel
 Array Multiplier**, where the final row acts as a **Ripple Carry Adder** to
