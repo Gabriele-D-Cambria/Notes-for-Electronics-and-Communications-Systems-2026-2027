@@ -22,8 +22,15 @@ title: Wireless Propagation Channel
       - [2.1.5.1. Additive White Gaussian Noise Channel](#2151-additive-white-gaussian-noise-channel)
       - [2.1.5.2. Flat Fading Channel](#2152-flat-fading-channel)
       - [2.1.5.3. Multipath Fading Channel](#2153-multipath-fading-channel)
-    - [2.1.6. Time Varying Channel and Doppler Shift](#216-time-varying-channel-and-doppler-shift)
-    <!--toc:end-->
+    - [2.1.6. Time Varying Channel](#216-time-varying-channel)
+      - [2.1.6.1. Doppler Shift](#2161-doppler-shift)
+      - [2.1.6.2. Channel's Coherence Time](#2162-channels-coherence-time)
+    - [2.1.7. Clarke Jakes Doppler Spectrum](#217-clarke-jakes-doppler-spectrum)
+      - [2.1.7.1. Spectral Broadening of a Sinusoidal Tone](#2171-spectral-broadening-of-a-sinusoidal-tone)
+    - [2.1.8. Doppler Spectrum](#218-doppler-spectrum)
+      - [2.1.8.1. Fading Channel Example](#2181-fading-channel-example)
+  - [2.2. Small Scale Fading Recap](#22-small-scale-fading-recap)
+  <!--toc:end-->
 
 # 2. Wireless Propagation Channel
 
@@ -774,7 +781,7 @@ probability, producing an **irreducible error floor**.
 <img class="40" src="./images/wpc/ber_multipath_fading.png"
     alt="BER vs SNR for Multipath Fading Channel">
 
-### 2.1.6. Time Varying Channel and Doppler Shift
+### 2.1.6. Time Varying Channel
 
 If the transmitter, receiver or surrounding scatterers are moving, the propagation
 paths change with time, making the channel **time varying**.
@@ -789,3 +796,286 @@ $$
 h(t, \tau) = \sum_{l=0}^{L-1} {\alpha_l(t) \cdot e^{j\phi_l(t)}
 \cdot \delta(\tau-\tau_l)}
 $$
+
+Thus, the channel output observed at time $t$ is:
+
+$$
+y(t) = \int{h(t,\tau)s(t-\tau)\;d\tau} =
+  \sum_{l=0}^{L-1} \alpha_l(t) e^{k\phi_l(t)}s(t-\tau_l)
+$$
+
+A simple example of a setup where path varies is when the source or
+the environment is moving, for example like when an ambulance going past us.
+
+#### 2.1.6.1. Doppler Shift
+
+<div class="grid2">
+<div class="">
+
+Knowing the distance between the two observer as $d$, and the speed
+of the ambulance as $v$, the time it takes for it to go from the
+first observer to the second is $t = {d \over v}$.
+
+At time $t_0$ the ambulance is at the position of the first
+observer, who immediately hears the siren. However, the second
+observer will only hear the sound at $t_0 + \frac{d}{v_s}$,
+where $v_s = 343\;m/s \approx 1200\;km/h$ is the _speed of sound_.
+
+At $t_0 + t$ the ambulance will be at the position of the second
+observer, which will immediately hear the sound.
+The first one will hear it after it has traveled back to him, at
+$t_0 + t + \frac{d}{v_s}$.
+
+This means that the duration of the siren will be:
+
+- $t - \frac{d}{v_s}$ for the second observer
+- $t + \frac{d}{v_s}$ for the first observer
+- $t$ for the driver of the ambulance
+
+This means that, in perspective to the driver:
+
+- The first observer will experiment a **lower observed frequency**
+- The second observer will experiment an **higher observed frequency**
+
+</div>
+<div class="">
+<img class="80" src="./images/wpc/ambulance-doppler-effect.png"
+      alt="Ambilance Doppler Effect">
+</div>
+</div>
+
+In wireless propagation, this effect is called **Doppler Shift**.
+
+Considering a receiver moving away from a fixed transmitter of
+a sinusoidal signal $s(t) = \sin(2\pi f_t)$ at constant radial
+velocity $v$.
+
+After $t$ seconds, the receiver will be at distance $d(t) = vt$ from
+the transmitter, corresponding to a propagation delay of:
+
+$$
+\tau(t) = \frac{vt}{c}
+$$
+
+Considering the propagation delay $\tau(t)$, the received signal will be:
+
+$$
+\begin{align*}
+  y(t) &= \sin(2\pi f_c (t - \tau(t))) \\
+       &= \sin(2\pi (f_ct - f_ct \frac{v}{c})) \\
+       &= \sin(2\pi t (f_c - f_c \frac{v}{c})) \\
+       &= \sin(2\pi (f_c + f_D)t) \\
+       &= \sin(2\pi f_r t) \\
+\end{align*}
+$$
+
+Where $f_D$ is the **Doppler Shift**, and can be expressed:
+
+$$
+  f_D = -\frac{f_c v}{c} = - \frac{v}{\lambda}
+$$
+
+> [!NOTE]
+> The convention is that:
+>
+> - If the receiver is **moving away**, the **phase accumulates more slowly**, hence
+>   the _Doppler Shift_ is positive.
+> - If the receiver is **moving towards**, the **phase accumulates more rapidly**,
+>   hence the _Doppler Shift_ is negative.
+
+However, we have seen that a signal does not arrive from one single direction,
+but from a spread, each shifted of $\theta_l$.
+
+Each of this component will experience _doppler shift_:
+
+$$
+f_{D,l} = -\frac{v}{\lambda} \cos{(\theta_l)} \le f_{D,max} = \frac{v}{\lambda}
+$$
+
+A resolvable multipath component may contain many scattered contributions
+with _similar delays_ but difference angles of arrival.
+
+The mobility itself produces a range of Doppler Shifts, which spectrum is called
+**Doppler Spread**:
+
+- **Maximum Negative Shift**: $\theta_l = 0 \quad \Rightarrow f_{D,l} = -\frac{v}{\lambda}$
+- **No Doppler Shift**: $\theta_l = \frac{\pi}{2} \quad \Rightarrow f_{D,l} = 0$
+- **Maximum Positive Shift**: $\theta_l = \pi \quad \Rightarrow f_{D,l} = \frac{v}{\lambda}$
+
+#### 2.1.6.2. Channel's Coherence Time
+
+The superposition of many scattered contributions, each with a different
+Doppler shift, makes the complex gain **vary randomly with time**.
+
+In particular, we can model each channel gain as a **stochastic process**,
+where the doppler shift appears as a _time-varying phase rotation_:
+
+$$
+h_l(t) = \sum_{m} a_{l,m} e^{j(2\pi f_{D,l,m}t + \phi_{l,m})}
+$$
+
+Over a suitable observation interval, the fading process
+can be modeled as **Wide-Sense-Stationary (WSS)**.
+
+Therefore, **its autocorrelation depends _only on the time difference_**
+$\Delta t$.
+
+Under two-dimensional isotropic scattering, the _Clarke-Jakes model_ gives:
+
+$$
+R_h(\Delta t) = \underbrace{J_0\left(2\pi f_{D, max} \Delta t\right)}_
+\text{Bessel Functions}
+$$
+
+The **channel's Coherence Time** $T_c$ is the time interval over which
+the channel _remains significantly_ correlated and can be regarded
+as **approximately constant**:
+
+$$
+T_c \approx \frac{1}{2f_D} = \frac{c}{2f_c v} = \frac{\lambda}{2v}
+$$
+
+Faster motion, or higher carrier frequency result in shorter coherence time.
+
+In terms of distance, the **coherence distance** is:
+
+$$
+d_c = vT_c \approx v\frac{c}{2f_c v} = \frac{\lambda}{2}
+$$
+
+> [!WARNING]
+> Both equations provided for $T_c$ and $d_c$ are **_APPROXIMATIONS_**.
+
+### 2.1.7. Clarke Jakes Doppler Spectrum
+
+<div class="grid2">
+<div class="">
+
+For a WSS fading process, the Doppler power spectral density
+is the _Fourier Transform of the temporal autocorrelation_:
+
+$$
+\begin{align*}
+  S_h(f) &= \int{R_h(\Delta t) e^{-j2\pi f \Delta t}\;d\Delta t} \\
+  &= \begin{cases}
+    \frac{1}{\pi f_{D,max}} \left(\sqrt{1 - \left(\frac{f}{f_{D,max}}\right)^2}
+    \right)^{-1} & \vert f \vert \le f_{D,max} \\[4em]
+    0 & \vert f \vert > f_{D,max}
+\end{cases}
+\end{align*}
+$$
+
+Meaning that, as we can see on the right, the fading spectrum is
+confined to: $f \in [-f_{D,max}, f_{D,max}]$.
+
+Therefore, mobility spreads the channel energy over a range of
+Doppler frequencies.
+
+</div>
+<div class="">
+<img class="60" src="./images/wpc/clarke-jackes-doppler-spectrum.png"
+      alt="Clarke Jackes Doppler Spectrum">
+</div>
+</div>
+
+#### 2.1.7.1. Spectral Broadening of a Sinusoidal Tone
+
+Considering a complex sinusoidal tone $s(t) = e^{2\pi f_0 t}$.
+
+After propagation through a **flat time-varying channel**:
+
+$$
+y(t) = h(t)st) = h(t)e^{2j\pi f_0 t}
+$$
+
+Its _Power Spectral Density_ of this signal will then be $S_y(f) = S_h(f - f_0)$
+
+<figure class="90">
+<img class="50" src="./images/wpc/spectral-broad-sinus-tone.png"
+      alt="Spectral Broadening of a Sinusoidal Tone">
+<figcaption>
+
+Since the Doppler spectrum is confined to $\vert f \vert \le f_{D,max}$ the
+convolution spreads the transmitted spectrum by up to $f_{D,max}$ on each
+side.
+
+</figcaption>
+</figure>
+
+If the transmitted signal occupied a frequency interval $f \in [f_1, f_2]$ (i.e.,
+has a band of $B = f_2 - f_1$), the received spectrum further extends:
+
+$$
+  f_1 - f_{D,max} \le f \le f_2 + f_{D, max} \qquad \Rightarrow \qquad
+  B_y = B + 2f_{D, max}
+$$
+
+Thus, the effect of mobility is a **broadening of the signal spectrum**.
+
+In a frequency-selective time-varying channel, each resolvable delay
+component has its own time-varying complex gain:
+
+$$
+h(t, \tau) = \sum_{l=0}^{L-1}{H_l(t) \delta(\tau - \tau_l)}
+$$
+
+Where $h_l(t) = \alpha_l(t) e^{j\phi_l(t)}$.
+
+Over a sufficiently short observation interval, the delays
+$\tau_l$ are approximately constant, while the tap coefficients
+$h_l(t)$ vary with time.
+
+Under WSS isotropic-scatternig assumptions, each tap undergoes
+_Clarke-Jakes fading_, so the overall channel combines both **Doppler
+Broadening** with **Multipath Frequency Selectivity**.
+
+### 2.1.8. Doppler Spectrum
+
+Doppler spread is a measure of the **spectral broadening** caused by
+motion.
+
+If the _baseband signal bandwidth_ $B_s \gg f_{D,max}$ the channel **varies
+slowly** compared with the signal time scale. We refer it as **slow fading**.
+
+On the other hand, if $B_s \le f_{D,max}$ the channel **may vary significantly**
+over the signal time scale. We refer to is as **fast fading**.
+
+Severe fast fading may make reliable reception impossible without sufficiently
+fast channel estimation and tracking.
+
+Similar considerations can be made in terms of symbol duration
+
+- A channel is **slow fading** if $T_c \gg T$
+- A channel is **fast fading** if $T_c \le T$
+
+#### 2.1.8.1. Fading Channel Example
+
+Consider a transmission at $f_c = 2.1\;GHz$ in a suburban area with RMS
+delay spread $\sigma = 2\;\mu s$ to a user moving at a speed $v = 90\;km/h
+= 25\;m/s$.
+The signal bandwidth is $B = 2\;MHz$, meaning that symbol time can be
+approximated as $T \sim 1/B_s = 500\;ns$.
+
+The maximum Doppler shift is:
+
+$$
+  f_{D,max} = \frac{f_c v}{c} = \dots = 175\;Hz
+$$
+
+Meaning that the coherence time will be approximately:
+
+$$
+  T_c \approx \frac{1}{2f_{D,max}} = 3\;ms
+$$
+
+The channel coherence bandwidth id $B_c \approx \frac{1}{5\sigma_\tau} = 100\;kHz$.
+
+We can say that:
+
+- The channel is slow $(B \gg f_{D,max} \Leftrightarrow T \ll T_c)$
+- It is **frequently selective** $(B \ge B_c \Leftrightarrow T \le \sigma_\tau)$
+
+## 2.2. Small Scale Fading Recap
+
+<img class="" src="./images/wpc/small-scale-fading-recap.png"
+      alt="Small Scale Fading Recap">
