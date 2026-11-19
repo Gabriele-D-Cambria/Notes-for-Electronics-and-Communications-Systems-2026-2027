@@ -176,6 +176,7 @@ I have posted notes (in Italian) for the Bachelor degree course
 1. [Digital Communications - PAM](./communications/Digital%20Communications%20-%20PAM)
 1. [Digital Communications - QAM](./communications/Digital%20Communications%20-%20QAM)
 1. [Wireless Propagation Channel](./communications/Wireless%20Propagation%20Channel)
+1. [Multi-Carrier Modulation](./communications/Multi%20Carrier%20Modulation)
 
 **Note**: if you need, [on my GitHub page](https://gabriele-d-cambria.github.io/Appunti-Comunicazioni-Numeriche-2025-2026)
 I have posted notes (in Italian) for the Bachelor degree course
