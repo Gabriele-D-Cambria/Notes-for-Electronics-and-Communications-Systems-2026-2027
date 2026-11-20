@@ -14,7 +14,9 @@ title: Multi-Carrier Modulation
     - [2.2.2. Cyclic Prefix](#222-cyclic-prefix)
   - [2.3. Continuous Time OFDM Signal](#23-continuous-time-ofdm-signal)
     - [2.3.1. Consequences of the Cyclic Prefix](#231-consequences-of-the-cyclic-prefix)
-    <!--toc:end-->
+    - [2.3.2. Power Spectral Density and Bandwidth](#232-power-spectral-density-and-bandwidth)
+  - [2.4. OFDM Baseband Transceiver](#24-ofdm-baseband-transceiver)
+  <!--toc:end-->
 
 # 2. Multi Carrier Modulation
 
@@ -418,5 +420,98 @@ $$
 If the channel remains constant over the block, multipath will change only the
 **amplitude and phase** of each sub-carrier, but not its **_orthogonality_**.
 
+<figure class="">
 <img class="" src="./images/ofdm/sub-carrier-separation-after-cp-removal.png"
       alt="Sub-carrier separation after CP removal"/>
+<figcaption>
+
+After the CP removal, each carrier is scaled by its channel coefficient $H[n]$.
+
+</figcaption>
+</figure>
+
+Over the useful interval $T_u$, each sub-carrier is a **complex sinusoid** windowed
+by a **unit-amplitude rectangular pulse** $g_T(t)$. Thus, its spectral magnitude
+has a _shifted_ $\operatorname*{sinc}$ shape. With $\Delta f_{sc} = \frac{1}{T_u}$,
+their spectrum has _zeros_ at the frequencies of all other sub-carriers.
+
+### 2.3.2. Power Spectral Density and Bandwidth
+
+Ignoring the cyclic prefix, each sub-carrier carries a sequence of
+**independent zero-mean symbols**, shaped by $g_T(t)$.
+
+As in PAM, its _power spectral density_ is:
+
+$$
+S_{s_n}(f) = \frac{E[\vert S[n]\vert^2]}{N} \cdot \frac{1}{T_u}
+  \left\vert G_T(f - n\Delta f_{sc}) \right\vert^2
+= \frac{E[\vert S[n]\vert^2]}{N} \cdot \frac{1}{T_u}
+  \left\vert \operatorname*{sinc}\left((f - n\Delta f_{sc})T_u\right) \right\vert^2
+$$
+
+For independent symbols across sub-carriers, the total power spectral density
+is the **sum** of the individual contributions:
+
+$$
+S_s(f) = \sum_{n=0}^{N-1} S_{s_n}(f)
+$$
+
+We can once again approximate the OFDM bandwidth, as:
+
+$$
+B_{OFDM} \approx N \Delta f = N \cdot \frac{1}{N}{T_s} = \frac{1}{T_s}
+$$
+
+## 2.4. OFDM Baseband Transceiver
+
+We can summarize the baseband OFDM transceiver as follows:
+
+<img class="" src="./images/ofdm/baseband-ofdm-transceiver.png"
+      alt="Baseband OFDM Transceiver"/>
+
+1. In the serial-to-parallel block, a block of $N$ consecutive data
+   symbols are collected in the vector
+   $$
+   \mathbf{S} = \begin{bmatrix}
+     S[0] \\
+     S[1] \\
+     \vdots \\
+     S[N-1]
+   \end{bmatrix}
+   $$
+1. The IDFT block converts $\mathbf{S}$ into a "time-domain" vector:
+   $$
+   \mathbf{s} = \mathbf{F}^H \mathbf{S}
+   $$
+1. A $N_{CP}$–long cyclic prefix is inserted to create the new time-domain
+   vector of length $N + N_{CP}$:
+
+   $$
+   \mathbf{s}_{CP} = \begin{bmatrix}
+     s[N-N_{CP}] \\
+     s[N-N_{CP}+1] \\
+     \vdots \\
+     s[N-1] \\
+     s[0] \\
+     s[1] \\
+     \vdots \\
+     s[N-1]
+     \end{bmatrix}
+   $$
+
+1. The signal propagates through the wireless channel with _equivalent
+   impulse_ response $\mathbf{h} = \left[ h[0], h[1], \ldots, h[L_{eq}-1] \right]$:
+   $$
+   r[k] = \sum_{l=0}^{L_{eq}-1} h[l] s_{CP}[k-l] + \tilde{w}[k]
+   $$
+1. At the receiver, the samples corresponding to the CP, which do not
+   carry any additional data, are discarded and the remaining samples
+   are collected in the vector $\mathbf{r}$ and then transformed into the frequency
+   domain by the DFT, yielding:
+   $$
+   \mathbf{R} = \mathbf{Fr} = \mathbf{F}\mathcal{H}_{circ}\mathbf{s} + \mathbf{Fw}
+    = \mathbf{\Lambda} \mathbf{S} + \mathbf{W}
+   $$
+1. Each sub-carrier is equalized before symbol detection. The decision is performed
+   on the equalized vector $\mathbf{X} = \mathbf{\Lambda}^{-1} \mathbf{R} =
+   \mathbf{\Lambda}^{-1}\mathbf{W}$, yielding the estimated symbol vector $\mathbf{S}$.
