@@ -15,7 +15,10 @@ title: Multi-Carrier Modulation
   - [2.3. Continuous Time OFDM Signal](#23-continuous-time-ofdm-signal)
     - [2.3.1. Consequences of the Cyclic Prefix](#231-consequences-of-the-cyclic-prefix)
     - [2.3.2. Power Spectral Density and Bandwidth](#232-power-spectral-density-and-bandwidth)
-  - [2.4. OFDM Baseband Transceiver](#24-ofdm-baseband-transceiver)
+  - [2.4. Choosing OFDM Parameters](#24-choosing-ofdm-parameters)
+  - [2.5. OFDM Baseband Transceiver](#25-ofdm-baseband-transceiver)
+  - [2.6. IEEE 802.11a/g Sub-carrier Allocation](#26-ieee-80211ag-sub-carrier-allocation)
+  - [2.7. Noise Before and After the DFT](#27-noise-before-and-after-the-dft)
   <!--toc:end-->
 
 # 2. Multi Carrier Modulation
@@ -413,8 +416,15 @@ $$
 y_n[k] &= \sum_{l=0}^{L_{eq}-1} h[l] s_{n,CP}[k-l] \\
   &= \frac{S[n]}{\sqrt{N}} e^{j2\pi n k/N} \sum_{l=0}^{L_{eq}-1} h[l] e^{-j2\pi
 nl/N} \\
-  &= H[n] s_n[k]
+  &= \frac{S[n]}{\sqrt{N}} \cdot e^{k2\pi n k/N} \cdot H[n] \\
+  &= s_n[k] \cdot H[n]
 \end{align*}
+$$
+
+We can also use matrix notation to express the received block as:
+
+$$
+Y[n] = H[n] S[n]
 $$
 
 If the channel remains constant over the block, multipath will change only the
@@ -431,9 +441,22 @@ After the CP removal, each carrier is scaled by its channel coefficient $H[n]$.
 </figure>
 
 Over the useful interval $T_u$, each sub-carrier is a **complex sinusoid** windowed
-by a **unit-amplitude rectangular pulse** $g_T(t)$. Thus, its spectral magnitude
-has a _shifted_ $\operatorname*{sinc}$ shape. With $\Delta f_{sc} = \frac{1}{T_u}$,
-their spectrum has _zeros_ at the frequencies of all other sub-carriers.
+by a **unit-amplitude rectangular pulse** $g_T(t) = \operatorname*{rect}\left(
+\frac{t - T_u/2}{T_u}\right)$.
+
+Thus, its spectral magnitude has a _shifted_ $\operatorname*{sinc}$ shape.
+With $\Delta f_{sc} = \frac{1}{T_u}$, their spectrum has _zeros_ at the
+frequencies of all other sub-carriers:
+
+$$
+\begin{align*}
+  S_n(f) &= \frac{S[n]}{\sqrt{N}} T_u e^{j2\pi \Delta f T_u/2} \operatorname*{sinc}
+((f - n\Delta f)T_u)\\
+  &= \frac{S[n]}{\sqrt{N}} T_u e^{-j\pi f T_u} \operatorname*{sinc}
+((f - n \Delta f)T_u) \\
+  &= \frac{S[n]}{\sqrt{N}} T_u e^{-j\pi f T_u} \operatorname*{sinc}(fT_u - n)
+\end{align*}
+$$
 
 ### 2.3.2. Power Spectral Density and Bandwidth
 
@@ -446,7 +469,6 @@ $$
 S_{s_n}(f) = \frac{E[\vert S[n]\vert^2]}{N} \cdot \frac{1}{T_u}
   \left\vert G_T(f - n\Delta f_{sc}) \right\vert^2
 = \frac{E[\vert S[n]\vert^2]}{N} \cdot \frac{1}{T_u}
-  \left\vert \operatorname*{sinc}\left((f - n\Delta f_{sc})T_u\right) \right\vert^2
 $$
 
 For independent symbols across sub-carriers, the total power spectral density
@@ -459,10 +481,49 @@ $$
 We can once again approximate the OFDM bandwidth, as:
 
 $$
-B_{OFDM} \approx N \Delta f = N \cdot \frac{1}{N}{T_s} = \frac{1}{T_s}
+B_{OFDM} \approx N \Delta f_{SC} = N \cdot \frac{1}{N}{T_s} = \frac{1}{T_s}
 $$
 
-## 2.4. OFDM Baseband Transceiver
+The bandwidth is similar to that of a PAM signal, which is:
+
+$$
+B_{PAM}^{(BP)} = \frac{1}{T_s} \cdot (1 + \alpha)
+$$
+
+We see that the only difference is the _roll-off factor_ $\alpha$ of the
+pulse shaping filter.
+
+## 2.4. Choosing OFDM Parameters
+
+When we want to use OFDM, we need to choose several parameters.
+
+Here's a summary of the most important ones:
+
+- **Cyclic Prefix Length**: It must cover the equivalent channel memory
+  $$
+    N_{CP} \ge L_{eq} - 1
+  $$
+- **Number of Sub-carriers**: For a fixed sampling interval $T_s$, increasing
+  $N$ increases the useful duration, but reduces the sub-carrier spacing:
+  $$
+    T_u = NT_s, \qquad \Delta f_{sc} = \frac{1}{T_u}
+  $$
+  A larger $N$ also reduces the relative CP overhead, but makes the transmission
+  more sensitive to _variation within the block_. Still, is should remain constant
+  over the complete block:
+  $$
+    T_{OFDM} = (N + N_{CP})T_S \ll T_c
+  $$
+- **Nominal Bandwidth**:
+  $$
+    B_{OFDM} \approx \frac{1}{T_s}
+  $$
+- **Sub-carrier Spacing**:
+  $$
+    \Delta f \approx \frac{B_{OFDM}}{N}
+  $$
+
+## 2.5. OFDM Baseband Transceiver
 
 We can summarize the baseband OFDM transceiver as follows:
 
@@ -515,3 +576,168 @@ We can summarize the baseband OFDM transceiver as follows:
 1. Each sub-carrier is equalized before symbol detection. The decision is performed
    on the equalized vector $\mathbf{X} = \mathbf{\Lambda}^{-1} \mathbf{R} =
    \mathbf{\Lambda}^{-1}\mathbf{W}$, yielding the estimated symbol vector $\mathbf{S}$.
+
+## 2.6. IEEE 802.11a/g Sub-carrier Allocation
+
+`IEEE 802.11a/g` (commonly known as _Wi-Fi_) uses OFDM with $N = 64$ sub-carriers,
+transmitting at a sampling rate of $B_{OFDM} = 20\;MHz$ (i.e., has a sampling
+interval of $T_s = 50\;ns$), giving each sub-carrier spacing of $312.5\;kHz$.
+
+Of the 64 sub-carriers, $48$ **carry data**, $4$ are used for **pilot signals**
+and the remaining $12$ are **null**, used as _guard bands_ to avoid
+interference due to adjacent signal (it dumps the non-null tails of the sinc-shaped
+sub-carrier spectra).
+
+<img class="" src="./images/ofdm/ieee-80211a-subcarrier-allocation.png"
+      alt="IEEE 802.11a/g Subcarrier Allocation"/>
+
+The cyclic prefix of each block is $N_{CP} = 16$ samples long, thus:
+
+$$
+\begin{align*}
+  T_u &= N T_s = 3.2\;\mu \\
+  T_{CP} &= N_{CP}T_s = 0.8\;\mu s \\
+  T_{OFDM} &= (N + N_{CP})T_s = 4\;\mu s
+\end{align*}
+$$
+
+For a receiver moving at $v = 3\;m/s$ and a carrier frequency of $f_c = 5\;GHz$,
+we can compute the **maximum Doppler shift**:
+
+$$
+f_{D,max} = f_c \cdot \frac{v}{c} = 50\;Hz
+$$
+
+Using $T_C \approx \frac{1}{2f_{D,max}}$, we can calculate the coherence time
+to be approximately $10\;ms$.
+
+Since $T_{OFDM} = 4\;\mu s \ll T_C \approx 10\;ms$, the channel can be considered
+constant over each block.
+
+Another parameter we have to consider is the _Symbol Rate_, in fact
+the purpose of all this shenanigans is to allow us to transmit symbols.
+
+Since each sub-carrier carries a new symbol every $T_{OFDM} = 4\;\mu s$,
+and there are $48$ sub-carriers dedicated to data transmission, the
+overall symbol rate is:
+
+$$
+R_{sym,data} = \frac{N_{data}}{T_{OFDM}} = \frac{48}{4\;\mu s} = 12\;Msym/s
+$$
+
+If we compare to a regular PAM:
+
+$$
+\begin{align*}
+  B_{PAM} &= \frac{1}{T_s} = 20\;MHz \\
+  R_{sym,PAM} &= \frac{1}{T_s} = \frac{B}{1+\alpha} = \frac{20}{1 + 0.5} = 13.3\;Msym/s
+\end{align*}
+$$
+
+We are losing a bit of bandwidth efficiency, but we are gaining robustness to
+multipath and frequency-selective fading.
+
+We can also compute some statistic regarding spectral efficiency:
+
+$$
+\begin{align*}
+  \eta_{CP} &= \frac{N_{CP}}{N + N_{CP}} = \frac{48}{4\;\mu s} = 20\%
+&& \text{CP insertion overhead}\\
+  \eta_{PG} &= \frac{N_{null} + N_{pilot}}{N} = 25\%
+&& \text{Pilot and Guard overhead}
+\end{align*}
+$$
+
+Our overall utilization of time-frequency resources is:
+
+$$
+  \frac{N}{N + N_{CP}} \cdot \frac{N_{data}}{N} = \frac{64}{80} \cdot
+\frac{48}{64} = 60\%
+$$
+
+## 2.7. Noise Before and After the DFT
+
+After CP removal, the $N$ useful received samples include
+**additive complex-baseband noise**:
+
+$$
+r[k] = y[k] + \tilde w[k], \qquad 0 \le k < N
+$$
+
+If we assume _independent circularly symmetric complex Gaussian noise samples_
+(i.e., $\tilde w[k] \sim \mathcal{CN}(0, 2N_0)$), stacking them
+into a vector gives us:
+
+$$
+\mathbf{w} := \begin{bmatrix}
+  \tilde w[0] \\
+  \tilde w[1] \\
+  \vdots \\
+  \tilde w[N-1]
+\end{bmatrix} \sim \mathcal{CN}(\mathbf{0}, 2N_0 \mathbf{I}_N)
+$$
+
+The _Discrete Fourier Transform_ (DFT) transforms the noise vector into
+$\mathbf{W} = \mathbf{Fw}$.
+
+Since $\mathbf{F}$ is a unitary matrix, the noise vector $\mathbf{W}$ maintains
+the **same distribution**:
+
+$$
+\begin{CD}
+{
+  E\Set{\mathbf{WW}^H} = \mathbf{FE}\Set{\mathbf{ww}^H}\mathbf{F}^H =
+  2N_0 \mathbf{FF}^H = 2N_0 \mathbf{I}_N
+} \\ @VVV \\
+{
+  \mathbf{W} \sim \mathcal{CN}(\mathbf{0}, 2N_0 \mathbf{I}_N)
+}
+\end{CD}
+$$
+
+The output of the **FFT** is:
+
+$$
+\mathbf{R} = \mathbf{\Lambda S} + \mathbf{W}
+$$
+
+Since known training and pilot symbols support channel estimation, the
+receiver can remove the effect of the channel by using the estimates of
+$H[n]$.
+
+If we assume perfect channel estimation and $H[n] \ne 0$, the decision variable
+will be:
+
+$$
+X[n] = \frac{R[n]}{H[n]} = S[n] + \frac{W[n]}{H[n]} = S[n] + W'[n],
+\qquad W'[n] \sim \mathcal{CN}(0, \frac{2N_0}{\vert H[n]\vert^2})
+$$
+
+Equalization **removes the channel gain**, but **_increases the noise
+variance_** on strongly attenuated sub-carriers.
+
+Without considering these last sub-carriers, after equalization each
+sub-carrier can be detected as in an AWGN (Additive White Gaussian Noise)
+channel, with a noise variance that depends on $\vert H[n] \vert^2$.
+
+The symbol error probability will then depend:
+
+- On the specific modulation employed to map the bits of the information source
+- On the OFDM noice variance
+
+For example, in case of $4$-QAM it is:
+
+$$
+\begin{align*}
+  P\left(e\middle\vert H[n]\right) \approx
+    2Q\left(\sqrt{\frac{E_s}{N_0} \cdot \vert H[n]\vert^2}\right) \\
+  \overline{P}_s \approx \frac{2}{N_{data}}
+    \sum_{n \in \mathcal{D}} Q\left(\sqrt{\frac{E_s}{N_0} \cdot \vert H[n]\vert^2}\right)
+\end{align*}
+$$
+
+Where:
+
+- $\mathcal{D}$ is the set of sub-carriers used for data transmission
+- $N_{data}$ is the number of sub-carriers used for data transmission
+- $\overline{P}_s$ is the **average symbol error probability**
